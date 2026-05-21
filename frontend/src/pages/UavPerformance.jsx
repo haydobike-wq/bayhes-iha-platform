@@ -21,24 +21,27 @@ function formatNumber(value, digits = 1) {
   });
 }
 
-function calculatePerformance(weightKg, runwayM) {
+function calculatePerformance(weightKg, runwayM, windMps) {
   const weightN = weightKg * G;
   const stallSpeed = Math.sqrt((2 * weightN) / (RHO * WING_AREA * CL_MAX));
   const takeoffSpeed = stallSpeed * TAKEOFF_SPEED_FACTOR;
+  const effectiveTakeoffSpeed = Math.max(takeoffSpeed - windMps * 0.18, stallSpeed * 1.12);
   const thrustWeight = MOTOR_THRUST / weightN;
-  const liftAtTakeoff = 0.5 * RHO * takeoffSpeed ** 2 * WING_AREA * CL_TAKEOFF;
-  const dragAtTakeoff = 0.5 * RHO * takeoffSpeed ** 2 * WING_AREA * CD_TAKEOFF;
+  const liftAtTakeoff = 0.5 * RHO * effectiveTakeoffSpeed ** 2 * WING_AREA * CL_TAKEOFF;
+  const dragAtTakeoff = 0.5 * RHO * effectiveTakeoffSpeed ** 2 * WING_AREA * CD_TAKEOFF;
   const rollingResistance = ROLLING_FRICTION * Math.max(weightN - liftAtTakeoff, 0);
   const netForce = MOTOR_THRUST - dragAtTakeoff - rollingResistance;
   const acceleration = netForce / weightKg;
   const safeAcceleration = Math.max(acceleration, 0);
-  const takeoffTime = safeAcceleration > 0 ? takeoffSpeed / safeAcceleration : Infinity;
-  const requiredRunway = safeAcceleration > 0 ? takeoffSpeed ** 2 / (2 * safeAcceleration) : Infinity;
+  const takeoffTime = safeAcceleration > 0 ? effectiveTakeoffSpeed / safeAcceleration : Infinity;
+  const requiredRunway =
+    safeAcceleration > 0 ? effectiveTakeoffSpeed ** 2 / (2 * safeAcceleration) : Infinity;
 
   return {
     weightN,
     stallSpeed,
     takeoffSpeed,
+    effectiveTakeoffSpeed,
     thrustWeight,
     acceleration,
     takeoffTime,
@@ -49,15 +52,16 @@ function calculatePerformance(weightKg, runwayM) {
 }
 
 export default function UavPerformance() {
-  const [form, setForm] = useState({ weightKg: '3.2', runwayM: '85' });
+  const [form, setForm] = useState({ weightKg: '3.2', runwayM: '85', windMps: '2' });
 
   const values = useMemo(() => {
     const weightKg = Number(form.weightKg);
     const runwayM = Number(form.runwayM);
-    if (!weightKg || !runwayM || weightKg <= 0 || runwayM <= 0) {
+    const windMps = Number(form.windMps);
+    if (!weightKg || !runwayM || weightKg <= 0 || runwayM <= 0 || !Number.isFinite(windMps)) {
       return null;
     }
-    return calculatePerformance(weightKg, runwayM);
+    return calculatePerformance(weightKg, runwayM, windMps);
   }, [form]);
 
   function handleChange(event) {
@@ -66,13 +70,11 @@ export default function UavPerformance() {
   }
 
   return (
-    <section className="module-page">
-      <div className="page-heading">
-        <p className="eyebrow">Sabit kanat performans hesabı</p>
-        <h1>İHA Performans Hesaplayıcı</h1>
+    <section className="module-content">
+      <div className="module-intro">
         <p>
-          Günlük uçuş değişkenleriyle stall hızı, güvenli kalkış hızı, gerekli pist mesafesi ve
-          motor yeterliliği için hızlı mühendislik değerlendirmesi.
+          Sabit kanat İHA için günlük kalkış değişkenlerine göre pist yeterliliği, güvenli kalkış
+          hızı ve motor itki değerlendirmesi.
         </p>
       </div>
 
@@ -97,6 +99,13 @@ export default function UavPerformance() {
                 onChange={handleChange}
                 min={0}
               />
+              <InputField
+                label="Rüzgar hızı"
+                name="windMps"
+                unit="m/s"
+                value={form.windMps}
+                onChange={handleChange}
+              />
             </div>
           </fieldset>
 
@@ -119,16 +128,17 @@ export default function UavPerformance() {
                 />
                 <ResultCard
                   label="Güvenli kalkış hızı"
-                  value={`${formatNumber(values.takeoffSpeed, 2)} m/s`}
-                  helper={`${formatNumber(values.takeoffSpeed * 3.6, 1)} km/h`}
+                  value={`${formatNumber(values.effectiveTakeoffSpeed, 2)} m/s`}
+                  helper={`${formatNumber(values.effectiveTakeoffSpeed * 3.6, 1)} km/h`}
                 />
                 <ResultCard
-                  label="Gerekli pist uzunluğu"
+                  label="Gerekli pist"
                   value={
                     Number.isFinite(values.requiredRunway)
                       ? `${formatNumber(values.requiredRunway)} m`
                       : 'Hesaplanamadı'
                   }
+                  tone={values.runwayOk ? 'success' : 'warning'}
                 />
                 <ResultCard
                   label="Kalkış süresi"
@@ -141,29 +151,25 @@ export default function UavPerformance() {
                 <ResultCard
                   label="İtki/ağırlık oranı"
                   value={formatNumber(values.thrustWeight, 2)}
-                />
-                <ResultCard
-                  label="Pist değerlendirmesi"
-                  value={values.runwayOk ? 'Pist yeterli görünüyor' : 'Pist yetersiz olabilir'}
-                  tone={values.runwayOk ? 'success' : 'warning'}
-                />
-                <ResultCard
-                  label="Motor değerlendirmesi"
-                  value={values.motorOk ? 'Motor itkisi yeterli görünüyor' : 'Motor itkisi yetersiz olabilir'}
                   tone={values.motorOk ? 'success' : 'warning'}
+                />
+                <ResultCard
+                  label="Operasyon sonucu"
+                  value={values.runwayOk && values.motorOk ? 'Güvenli görünüyor' : 'Riskli olabilir'}
+                  tone={values.runwayOk && values.motorOk ? 'success' : 'warning'}
                 />
               </div>
             ) : (
-              <div className="empty-state">Geçerli ağırlık ve pist değeri girin.</div>
+              <div className="empty-state">Geçerli ağırlık, pist ve rüzgar değeri girin.</div>
             )}
           </div>
 
           <div className="panel note-panel">
             <Gauge size={28} />
-            <h2>Yaklaşık Analiz Notu</h2>
+            <h2>Analiz Notu</h2>
             <p>
-              Bu sonuçlar yaklaşık mühendislik hesabıdır; gerçek uçuş testi, emniyet kontrolü ve
-              saha prosedürlerinin yerine geçmez.
+              Sonuçlar yaklaşık mühendislik hesabıdır; gerçek uçuş testi, saha emniyeti ve kontrol
+              prosedürlerinin yerine geçmez.
             </p>
           </div>
         </aside>

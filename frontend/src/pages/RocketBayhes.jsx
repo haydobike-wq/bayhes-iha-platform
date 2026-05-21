@@ -120,14 +120,11 @@ export default function RocketBayhes() {
   }
 
   return (
-    <section className="module-page">
-      <div className="page-heading">
-        <p className="eyebrow">Model roket simülasyonu</p>
-        <h1>BAYHES - Balistik Yörünge ve Güvenli Alan Analizi</h1>
+    <section className="module-content">
+      <div className="module-intro">
         <p>
-          Bu modül, model roket uçuşlarında roket parametreleri ve çevresel koşullara göre
-          tahmini yörünge, maksimum irtifa, uçuş süresi ve düşüş alanı analizi yapmak için
-          tasarlanmıştır.
+          Model roket uçuşlarında roket parametreleri ve çevresel koşullara göre tahmini yörünge,
+          maksimum irtifa, uçuş süresi ve düşüş alanı analizi yapmak için tasarlanmıştır.
         </p>
       </div>
 
@@ -163,7 +160,7 @@ export default function RocketBayhes() {
 
         <aside className="results-column">
           <div className="panel">
-            <h2>Sonuçlar</h2>
+            <h2>Analiz Sonuçları</h2>
             {result ? (
               <div className="result-grid">
                 <ResultCard label="Mesafe" value={`${formatNumber(result.distance_m)} m`} />
@@ -178,10 +175,7 @@ export default function RocketBayhes() {
                   label="EN sapması"
                   value={`${formatNumber(result.impact_E)} E / ${formatNumber(result.impact_N)} N`}
                 />
-                <ResultCard
-                  label="Maksimum hız"
-                  value={`${formatNumber(result.max_speed_mps)} m/s`}
-                />
+                <ResultCard label="Maksimum hız" value={`${formatNumber(result.max_speed_mps)} m/s`} />
               </div>
             ) : (
               <div className="empty-state">Simülasyon çıktıları burada listelenecek.</div>
@@ -190,8 +184,8 @@ export default function RocketBayhes() {
 
           <div className="panel map-placeholder">
             <Map size={28} />
-            <h2>Harita Alanı</h2>
-            <p>Leaflet entegrasyonu için ayrılmış güvenli alan ve yörünge görselleştirme bölümü.</p>
+            <h2>Güvenli Alan Görselleştirme</h2>
+            <p>Leaflet entegrasyonu için ayrılmış düşüş alanı ve yörünge görselleştirme bölümü.</p>
           </div>
         </aside>
       </div>
