@@ -35,9 +35,25 @@ const elements = {
   rollAxis: document.querySelector("#rollAxis"),
   pitchAxis: document.querySelector("#pitchAxis"),
   yawAxis: document.querySelector("#yawAxis"),
+  performanceForm: document.querySelector("#performanceForm"),
+  batteryWh: document.querySelector("#batteryWh"),
+  powerW: document.querySelector("#powerW"),
+  cruiseSpeed: document.querySelector("#cruiseSpeed"),
+  payloadKg: document.querySelector("#payloadKg"),
+  enduranceResult: document.querySelector("#enduranceResult"),
+  rangeResult: document.querySelector("#rangeResult"),
+  payloadResult: document.querySelector("#payloadResult"),
   pages: {
     home: document.querySelector("#homePage"),
+    rocketSystems: document.querySelector("#rocketSystemsPage"),
     ihaSystems: document.querySelector("#ihaSystemsPage"),
+    ihaPerformance: document.querySelector("#ihaPerformancePage"),
+    bayhes: document.querySelector("#bayhesPage"),
+    ihaMission: document.querySelector("#ihaMissionPage"),
+    ihaAnalysis: document.querySelector("#ihaAnalysisPage"),
+    rocketMission: document.querySelector("#rocketMissionPage"),
+    rocketAnalysis: document.querySelector("#rocketAnalysisPage"),
+    rocketTest: document.querySelector("#rocketTestPage"),
     imuSimulation: document.querySelector("#imuSimulationPage"),
   },
 };
@@ -49,18 +65,20 @@ elements.connectButton.disabled = !serialSupported;
 elements.connectButton.addEventListener("click", connectSerial);
 elements.disconnectButton.addEventListener("click", () => disconnectSerial("Bağlantı kesildi."));
 elements.calibrateButton.addEventListener("click", calibrateView);
-document.querySelectorAll("[data-page-target]").forEach((control) => {
-  control.addEventListener("click", (event) => {
-    const target = event.currentTarget.dataset.pageTarget;
-    showPage(target);
-  });
+elements.performanceForm.addEventListener("submit", handlePerformanceSubmit);
 
-  control.addEventListener("keydown", (event) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      showPage(event.currentTarget.dataset.pageTarget);
-    }
-  });
+document.addEventListener("click", (event) => {
+  const control = event.target.closest("[data-page-target]");
+  if (!control) return;
+  showPage(control.dataset.pageTarget);
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter" && event.key !== " ") return;
+  const control = event.target.closest("[data-page-target]");
+  if (!control) return;
+  event.preventDefault();
+  showPage(control.dataset.pageTarget);
 });
 window.addEventListener("resize", resizeRenderer);
 window.addEventListener("beforeunload", () => {
@@ -120,13 +138,46 @@ function showPage(pageName) {
 
   const titles = {
     home: "Avionix Aerospace Görev ve Operasyon Paneli",
+    rocketSystems: "Avionix Roket Sistemleri",
     ihaSystems: "Avionix İHA Sistemleri",
+    ihaPerformance: "Avionix İHA Performans Hesaplayıcı",
+    bayhes: "Avionix Bayhes",
+    ihaMission: "Avionix İHA Görev Operasyonu",
+    ihaAnalysis: "Avionix İHA Analiz Paneli",
+    rocketMission: "Avionix Roket Görev Planlama",
+    rocketAnalysis: "Avionix Roket Uçuş Analizi",
+    rocketTest: "Avionix Roket Yer Testleri",
     imuSimulation: "Avionix IMU Uçuş Simülasyonu",
   };
 
   document.title = titles[pageName] ?? titles.home;
   window.scrollTo({ top: 0, behavior: "instant" });
   resizeRenderer();
+}
+
+function handlePerformanceSubmit(event) {
+  event.preventDefault();
+
+  const batteryWh = Number(elements.batteryWh.value);
+  const powerW = Number(elements.powerW.value);
+  const cruiseSpeed = Number(elements.cruiseSpeed.value);
+  const payloadKg = Number(elements.payloadKg.value);
+
+  if (![batteryWh, powerW, cruiseSpeed, payloadKg].every(Number.isFinite) || batteryWh <= 0 || powerW <= 0 || cruiseSpeed <= 0) {
+    elements.enduranceResult.textContent = "Geçersiz veri";
+    elements.rangeResult.textContent = "-";
+    elements.payloadResult.textContent = "-";
+    return;
+  }
+
+  const payloadPenalty = Math.min(payloadKg * 0.035, 0.35);
+  const enduranceHours = (batteryWh / powerW) * (1 - payloadPenalty);
+  const enduranceMinutes = enduranceHours * 60;
+  const rangeKm = enduranceHours * cruiseSpeed;
+
+  elements.enduranceResult.textContent = `${enduranceMinutes.toFixed(1)} dk`;
+  elements.rangeResult.textContent = `${rangeKm.toFixed(1)} km`;
+  elements.payloadResult.textContent = `%${(payloadPenalty * 100).toFixed(1)} tüketim etkisi`;
 }
 
 async function connectSerial() {
