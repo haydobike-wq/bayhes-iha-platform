@@ -483,6 +483,21 @@ dd {
   color: var(--success);
 }
 
+.model-status {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.35;
+  margin-top: 6px;
+}
+
+.model-status.ok {
+  color: var(--success);
+}
+
+.model-status.warn {
+  color: var(--warning);
+}
+
 .viewer-wrap {
   background: #070d16;
   min-height: 530px;

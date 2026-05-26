@@ -1,7 +1,12 @@
 import * as THREE from "https://unpkg.com/three@0.164.1/build/three.module.js";
+import { GLTFLoader } from "https://unpkg.com/three@0.164.1/examples/jsm/loaders/GLTFLoader.js";
 
 const BAUD_RATE = 115200;
 const STALE_DATA_MS = 1800;
+const GLB_MODEL_PATH = "models/avionix_iha.glb";
+const GLB_TARGET_SIZE = 3.8;
+const GLB_MODEL_SCALE = 1;
+const MODEL_BASE_ROTATION = { x: 0, y: 0, z: 0 };
 
 const performanceConstants = {
   wingArea: 0.30306,
@@ -53,6 +58,7 @@ const elements = {
   dataStatus: document.querySelector("#dataStatus"),
   lastDataTime: document.querySelector("#lastDataTime"),
   sceneBadge: document.querySelector("#sceneBadge"),
+  modelStatus: document.querySelector("#modelStatus"),
   canvas: document.querySelector("#sceneCanvas"),
   rollInvert: document.querySelector("#rollInvert"),
   pitchInvert: document.querySelector("#pitchInvert"),
@@ -118,8 +124,11 @@ const axes = new THREE.AxesHelper(2);
 axes.position.set(-3.6, -1.05, -3.4);
 scene.add(axes);
 
-const aircraft = createAircraft();
-scene.add(aircraft);
+const aircraftRoot = new THREE.Group();
+const fallbackAircraft = createAircraft();
+aircraftRoot.add(fallbackAircraft);
+scene.add(aircraftRoot);
+loadAircraftModel();
 
 const initialPage = getInitialPageId();
 history.replaceState({ page: "homePage" }, "", "#homePage");
@@ -489,10 +498,56 @@ function updateDataStatus() {
 
 function updateAircraftRotation() {
   const display = getDisplayAngles();
-  aircraft.rotation.order = "YXZ";
-  aircraft.rotation.y = THREE.MathUtils.degToRad(display.yaw);
-  aircraft.rotation.x = THREE.MathUtils.degToRad(display.roll);
-  aircraft.rotation.z = THREE.MathUtils.degToRad(display.pitch);
+  aircraftRoot.rotation.order = "YXZ";
+  aircraftRoot.rotation.y = THREE.MathUtils.degToRad(display.yaw);
+  aircraftRoot.rotation.x = THREE.MathUtils.degToRad(display.roll);
+  aircraftRoot.rotation.z = THREE.MathUtils.degToRad(display.pitch);
+}
+
+function loadAircraftModel() {
+  setModelStatus("Model yükleniyor...", "");
+
+  const loader = new GLTFLoader();
+  loader.load(
+    GLB_MODEL_PATH,
+    (gltf) => {
+      const model = gltf.scene;
+      normalizeLoadedModel(model);
+      aircraftRoot.clear();
+      aircraftRoot.add(model);
+      setModelStatus("Gerçek Avionix İHA modeli yüklendi.", "ok");
+    },
+    undefined,
+    () => {
+      setModelStatus("Gerçek model bulunamadı, varsayılan model kullanılıyor.", "warn");
+    },
+  );
+}
+
+function normalizeLoadedModel(model) {
+  model.updateMatrixWorld(true);
+
+  const box = new THREE.Box3().setFromObject(model);
+  const size = new THREE.Vector3();
+  const center = new THREE.Vector3();
+  box.getSize(size);
+  box.getCenter(center);
+
+  model.position.sub(center);
+
+  const maxAxis = Math.max(size.x, size.y, size.z);
+  if (maxAxis > 0) {
+    const scale = (GLB_TARGET_SIZE / maxAxis) * GLB_MODEL_SCALE;
+    model.scale.setScalar(scale);
+  }
+
+  model.rotation.set(MODEL_BASE_ROTATION.x, MODEL_BASE_ROTATION.y, MODEL_BASE_ROTATION.z);
+}
+
+function setModelStatus(message, tone) {
+  elements.modelStatus.textContent = message;
+  elements.modelStatus.classList.toggle("ok", tone === "ok");
+  elements.modelStatus.classList.toggle("warn", tone === "warn");
 }
 
 function createAircraft() {
