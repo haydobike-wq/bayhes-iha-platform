@@ -15,6 +15,17 @@ const performanceConstants = {
   rollingFriction: 0.04,
 };
 
+const pageParents = {
+  homePage: null,
+  rocketSystemsPage: "homePage",
+  bayhesPage: "rocketSystemsPage",
+  ihaSystemsPage: "homePage",
+  performancePage: "ihaSystemsPage",
+  imuSimulationPage: "ihaSystemsPage",
+};
+
+let currentPage = "homePage";
+
 const imuState = {
   raw: { roll: 0, pitch: 0, yaw: 0 },
   offset: { roll: 0, pitch: 0, yaw: 0 },
@@ -55,6 +66,7 @@ elements.connectButton.disabled = !serialSupported;
 document.addEventListener("click", (event) => {
   const control = event.target.closest("[data-page-target]");
   if (!control) return;
+  event.preventDefault();
   showPage(control.dataset.pageTarget);
 });
 
@@ -73,7 +85,7 @@ elements.disconnectButton.addEventListener("click", () => disconnectSerial("Bağ
 elements.calibrateButton.addEventListener("click", calibrateView);
 window.addEventListener("resize", resizeRenderer);
 window.addEventListener("popstate", (event) => {
-  const pageId = event.state?.page || getInitialPageId();
+  const pageId = event.state?.page || pageParents[currentPage] || "homePage";
   showPage(pageId, false);
 });
 window.addEventListener("beforeunload", () => {
@@ -110,8 +122,11 @@ const aircraft = createAircraft();
 scene.add(aircraft);
 
 const initialPage = getInitialPageId();
-history.replaceState({ page: initialPage }, "", `#${initialPage}`);
-showPage(initialPage, false);
+history.replaceState({ page: "homePage" }, "", "#homePage");
+showPage("homePage", false);
+if (initialPage !== "homePage") {
+  showPage(initialPage, true);
+}
 updateReadouts();
 animate();
 
@@ -123,6 +138,7 @@ function getInitialPageId() {
 function showPage(pageId, pushHistory = true) {
   const target = document.querySelector(`#${pageId}`);
   if (!target) return;
+  if (pageId === currentPage && pushHistory) return;
 
   if (document.querySelector("#imuSimulationPage").classList.contains("page-active") && pageId !== "imuSimulationPage" && imuState.port) {
     disconnectSerial("IMU ekranından çıkıldı. Bağlantı kapatıldı.");
@@ -142,6 +158,7 @@ function showPage(pageId, pushHistory = true) {
   };
 
   document.title = titles[pageId] ?? titles.homePage;
+  currentPage = pageId;
   if (pushHistory && window.location.hash !== `#${pageId}`) {
     history.pushState({ page: pageId }, "", `#${pageId}`);
   }
