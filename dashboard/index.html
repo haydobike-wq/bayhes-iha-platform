@@ -8,280 +8,165 @@
   </head>
   <body>
     <main class="app-shell">
-      <section id="homePage" class="page page-active" aria-label="Ana sayfa">
-        <header class="hero-panel">
-          <div class="hero-copy">
-            <span class="eyebrow">Avionix Operasyon Paneli</span>
-            <h1>Avionix Aerospace Görev ve Operasyon Paneli</h1>
-            <p>Roket ve İHA sistemleri için görev, performans ve simülasyon araçları.</p>
-          </div>
-          <div class="hero-status" aria-label="Sistem durumu">
-            <span>Komuta Kontrol</span>
-            <strong>Operasyon Hazır</strong>
-          </div>
+      <section id="homePage" class="page page-active" aria-label="Ana ekran">
+        <header class="home-hero">
+          <p class="eyebrow">Avionix Aerospace</p>
+          <h1>Avionix Aerospace Görev ve Operasyon Paneli</h1>
+          <p class="hero-copy">Araç kategorisini seçerek ilgili analiz ve kontrol modüllerine erişin. Modüller sistem geliştikçe bu panel üzerinden genişletilecektir.</p>
         </header>
 
-        <section class="category-grid" aria-label="Sistem kategorileri">
-          <article class="module-card system-card rocket-card" tabindex="0" data-page-target="rocketSystems">
-            <span class="card-icon">RKT</span>
+        <section class="system-grid" aria-label="Araç kategorileri">
+          <article class="system-card" tabindex="0" data-page-target="rocketSystemsPage">
             <div>
+              <span class="card-kicker">RKT</span>
               <h2>Roket Sistemleri</h2>
-              <p>Roket görev, analiz, test ve operasyon modülleri.</p>
+              <p>Model roket testleri için yörünge, simülasyon ve güvenli alan analizleri.</p>
             </div>
-            <button type="button" data-page-target="rocketSystems">Sistemi Aç</button>
+            <button type="button" data-page-target="rocketSystemsPage">Seç →</button>
           </article>
 
-          <article class="module-card system-card iha-card" tabindex="0" data-page-target="ihaSystems">
-            <span class="card-icon">İHA</span>
+          <article class="system-card" tabindex="0" data-page-target="ihaSystemsPage">
             <div>
+              <span class="card-kicker">İHA</span>
               <h2>İHA Sistemleri</h2>
-              <p>Performans hesabı, Bayhes, görev analizi ve simülasyon modülleri.</p>
+              <p>Sabit kanat İHA operasyonları için performans ve hazırlık analizleri.</p>
             </div>
-            <button type="button" data-page-target="ihaSystems">Sistemi Aç</button>
+            <button type="button" data-page-target="ihaSystemsPage">Seç →</button>
           </article>
         </section>
+
+        <section class="info-bar" aria-label="Panel açıklaması">
+          <p>Modül seçerek analiz ve kontrol ekranlarına erişin.</p>
+          <p>Bu arayüz eğitim, test, simülasyon ve güvenli operasyon analizi amacıyla hazırlanmıştır.</p>
+        </section>
+
+        <footer class="site-footer">
+          <span>Avionix Aerospace</span>
+          <span>Demo operasyon paneli</span>
+          <span>Eğitim, test ve güvenli analiz modu</span>
+        </footer>
       </section>
 
-      <section id="rocketSystemsPage" class="page" aria-label="Roket sistemleri">
-        <header class="section-header">
+      <section id="rocketSystemsPage" class="page" aria-label="Roket Sistemleri">
+        <header class="page-header">
           <div>
-            <span class="breadcrumb">Ana Sayfa / Roket Sistemleri</span>
+            <p class="breadcrumb">Ana ekran / Roket Sistemleri</p>
             <h1>Roket Sistemleri</h1>
-            <p>Roket operasyonları için görev hazırlığı, test kaydı ve analiz ekranları.</p>
+            <p>Model roket testleri için analiz ve kontrol modülleri.</p>
           </div>
-          <button class="ghost-button" type="button" data-page-target="home">Ana Sayfaya Dön</button>
+          <button type="button" class="secondary-button" data-page-target="homePage">Ana Sayfaya Dön</button>
         </header>
 
-        <section class="module-grid" aria-label="Roket modülleri">
-          <article class="module-card" tabindex="0" data-page-target="rocketMission">
-            <span class="card-icon">GÖR</span>
-            <div>
-              <h2>Görev Planlama</h2>
-              <p>Roket görev profili, hedef irtifa ve operasyon kontrol listesi.</p>
-            </div>
-            <button type="button" data-page-target="rocketMission">Modülü Aç</button>
-          </article>
-
-          <article class="module-card" tabindex="0" data-page-target="rocketAnalysis">
-            <span class="card-icon">ANL</span>
-            <div>
-              <h2>Uçuş Analizi</h2>
-              <p>İrtifa, hız, menzil ve test sonrası değerlendirme ekranı.</p>
-            </div>
-            <button type="button" data-page-target="rocketAnalysis">Modülü Aç</button>
-          </article>
-
-          <article class="module-card" tabindex="0" data-page-target="rocketTest">
-            <span class="card-icon">TST</span>
-            <div>
-              <h2>Yer Testleri</h2>
-              <p>Ateşleme, aviyonik ve güvenlik ön kontrol kayıtları.</p>
-            </div>
-            <button type="button" data-page-target="rocketTest">Modülü Aç</button>
+        <section class="module-grid">
+          <article class="module-card" tabindex="0" data-page-target="bayhesPage">
+            <span class="card-kicker">BAYHES</span>
+            <h2>BAYHES</h2>
+            <p>Balistik yörünge ve güvenli alan hesaplama sistemi.</p>
+            <button type="button" data-page-target="bayhesPage">Modülü Aç</button>
           </article>
         </section>
       </section>
 
-      <section id="ihaSystemsPage" class="page" aria-label="İHA sistemleri">
-        <header class="section-header">
+      <section id="ihaSystemsPage" class="page" aria-label="İHA Sistemleri">
+        <header class="page-header">
           <div>
-            <span class="breadcrumb">Ana Sayfa / İHA Sistemleri</span>
+            <p class="breadcrumb">Ana ekran / İHA Sistemleri</p>
             <h1>İHA Sistemleri</h1>
-            <p>Eski İHA modülleri korunur; IMU Simülasyonu ek bir modül olarak çalışır.</p>
+            <p>Sabit kanat İHA operasyonları için performans ve hazırlık analizleri.</p>
           </div>
-          <button class="ghost-button" type="button" data-page-target="home">Ana Sayfaya Dön</button>
+          <button type="button" class="secondary-button" data-page-target="homePage">Ana Sayfaya Dön</button>
         </header>
 
-        <section class="module-grid" aria-label="İHA modülleri">
-          <article class="module-card" tabindex="0" data-page-target="ihaPerformance">
-            <span class="card-icon">PERF</span>
-            <div>
-              <h2>Performans Hesaplayıcı</h2>
-              <p>İHA menzil, süre ve görev yükü etkisini hızlıca hesaplayın.</p>
-            </div>
-            <button type="button" data-page-target="ihaPerformance">Performans Hesabını Aç</button>
+        <section class="module-grid two-column">
+          <article class="module-card" tabindex="0" data-page-target="performancePage">
+            <span class="card-kicker">PERF</span>
+            <h2>Performans Parametreleri</h2>
+            <p>Sabit kanat İHA için kalkış, pist, hız ve temel uçuş performansı analizleri.</p>
+            <button type="button" data-page-target="performancePage">Modülü Aç</button>
           </article>
 
-          <article class="module-card" tabindex="0" data-page-target="bayhes">
-            <span class="card-icon">BAY</span>
-            <div>
-              <h2>Bayhes</h2>
-              <p>Bayhes operasyon ve hesaplama ekranına geçiş yapın.</p>
-            </div>
-            <button type="button" data-page-target="bayhes">Bayhes'i Aç</button>
-          </article>
-
-          <article class="module-card" tabindex="0" data-page-target="ihaMission">
-            <span class="card-icon">GÖR</span>
-            <div>
-              <h2>Görev Operasyonu</h2>
-              <p>İHA görev hazırlığı, uçuş fazları ve operasyon notları.</p>
-            </div>
-            <button type="button" data-page-target="ihaMission">Modülü Aç</button>
-          </article>
-
-          <article class="module-card" tabindex="0" data-page-target="ihaAnalysis">
-            <span class="card-icon">ANL</span>
-            <div>
-              <h2>Analiz Paneli</h2>
-              <p>Telemetri, uçuş sonrası değerlendirme ve sistem durumu özetleri.</p>
-            </div>
-            <button type="button" data-page-target="ihaAnalysis">Modülü Aç</button>
-          </article>
-
-          <article class="module-card imu-module-card" tabindex="0" data-page-target="imuSimulation">
-            <span class="card-icon">IMU</span>
-            <div>
-              <h2>IMU Simülasyonu</h2>
-              <p>ESP32-S3 + MPU6050 üzerinden gelen roll, pitch, yaw verileriyle gerçek zamanlı 3D uçak yönelim simülasyonu.</p>
-            </div>
-            <button type="button" data-page-target="imuSimulation">Simülasyonu Aç</button>
+          <article class="module-card" tabindex="0" data-page-target="imuSimulationPage">
+            <span class="card-kicker">IMU</span>
+            <h2>IMU Simülasyonu</h2>
+            <p>ESP32-S3 + MPU6050 üzerinden gelen roll, pitch, yaw verileriyle gerçek zamanlı 3D uçak yönelim simülasyonu.</p>
+            <button type="button" data-page-target="imuSimulationPage">Simülasyonu Aç</button>
           </article>
         </section>
       </section>
 
-      <section id="ihaPerformancePage" class="page" aria-label="Performans hesaplayıcı">
-        <header class="section-header">
+      <section id="bayhesPage" class="page" aria-label="Bayhes hesaplama ekranı">
+        <header class="page-header">
           <div>
-            <span class="breadcrumb">İHA Sistemleri / Performans Hesaplayıcı</span>
-            <h1>Performans Hesaplayıcı</h1>
-            <p>Temel uçuş süresi ve menzil hesabı için operasyon aracı.</p>
+            <p class="breadcrumb">Roket Sistemleri / BAYHES</p>
+            <h1>BAYHES</h1>
+            <p>Balistik yörünge ve güvenli alan hesaplama sistemi.</p>
           </div>
-          <button class="ghost-button" type="button" data-page-target="ihaSystems">İHA Sistemlerine Dön</button>
+          <button type="button" class="secondary-button" data-page-target="rocketSystemsPage">Roket Sistemlerine Dön</button>
         </header>
 
-        <section class="tool-grid">
-          <form id="performanceForm" class="ops-panel">
-            <label>Batarya kapasitesi (Wh)<input id="batteryWh" type="number" min="1" value="220"></label>
-            <label>Ortalama güç tüketimi (W)<input id="powerW" type="number" min="1" value="180"></label>
-            <label>Seyir hızı (km/s)<input id="cruiseSpeed" type="number" min="1" value="52"></label>
-            <label>Görev yükü (kg)<input id="payloadKg" type="number" min="0" step="0.1" value="0.8"></label>
+        <section class="calculator-layout">
+          <form id="bayhesForm" class="control-card">
+            <label>Çıkış hızı (m/s)<input id="bayhesVelocity" type="number" min="1" value="85"></label>
+            <label>Atış açısı (derece)<input id="bayhesAngle" type="number" min="1" max="89" value="55"></label>
+            <label>Başlangıç yüksekliği (m)<input id="bayhesHeight" type="number" min="0" value="1.5"></label>
+            <label>Güvenlik katsayısı<input id="bayhesSafety" type="number" min="1" step="0.1" value="1.25"></label>
             <button type="submit">Hesapla</button>
           </form>
-          <div class="result-panel">
-            <span class="eyebrow">Hesap Sonucu</span>
-            <dl class="metric-list">
-              <div><dt>Uçuş süresi</dt><dd id="enduranceResult">-</dd></div>
-              <div><dt>Tahmini menzil</dt><dd id="rangeResult">-</dd></div>
-              <div><dt>Yük etkisi</dt><dd id="payloadResult">-</dd></div>
+
+          <section class="results-card">
+            <h2>Sonuç Alanı</h2>
+            <dl class="result-list">
+              <div><dt>Uçuş süresi</dt><dd id="bayhesTime">-</dd></div>
+              <div><dt>Maksimum irtifa</dt><dd id="bayhesAltitude">-</dd></div>
+              <div><dt>Tahmini menzil</dt><dd id="bayhesRange">-</dd></div>
+              <div><dt>Güvenli alan yarıçapı</dt><dd id="bayhesSafeRadius">-</dd></div>
             </dl>
-          </div>
+          </section>
         </section>
       </section>
 
-      <section id="bayhesPage" class="page" aria-label="Bayhes">
-        <header class="section-header">
+      <section id="performancePage" class="page" aria-label="Performans Parametreleri">
+        <header class="page-header">
           <div>
-            <span class="breadcrumb">İHA Sistemleri / Bayhes</span>
-            <h1>Bayhes</h1>
-            <p>Bayhes modülü için operasyon, hesaplama ve görev destek ekranı.</p>
+            <p class="breadcrumb">İHA Sistemleri / Performans Parametreleri</p>
+            <h1>Performans Parametreleri</h1>
+            <p>Sabit kanat İHA için kalkış, pist, hız ve temel uçuş performansı analizleri.</p>
           </div>
-          <button class="ghost-button" type="button" data-page-target="ihaSystems">İHA Sistemlerine Dön</button>
+          <button type="button" class="secondary-button" data-page-target="ihaSystemsPage">İHA Sistemlerine Dön</button>
         </header>
-        <section class="ops-panel detail-panel">
-          <h2>Bayhes Operasyon Modülü</h2>
-          <p>Bu ekran eski Bayhes geçişinin yerini korur. Bayhes hesaplama/operasyon iş akışları bu panelden sürdürülebilir.</p>
-          <div class="status-strip">
-            <span>Modül Durumu</span>
-            <strong>Hazır</strong>
-          </div>
+
+        <section class="calculator-layout">
+          <form id="performanceForm" class="control-card">
+            <label>Uçak kalkış ağırlığı (kg)<input id="aircraftWeightKg" type="number" min="0.1" step="0.1" value="3.5"></label>
+            <label>Pist uzunluğu (m)<input id="runwayLengthM" type="number" min="1" step="0.1" value="55"></label>
+            <button type="submit">Hesapla</button>
+          </form>
+
+          <section class="performance-results">
+            <article><span>Stall speed</span><strong id="stallSpeedResult">-</strong></article>
+            <article><span>Güvenli kalkış hızı</span><strong id="takeoffSpeedResult">-</strong></article>
+            <article><span>Gerekli pist uzunluğu</span><strong id="requiredRunwayResult">-</strong></article>
+            <article><span>Kalkış süresi</span><strong id="takeoffTimeResult">-</strong></article>
+            <article><span>İtki / ağırlık oranı</span><strong id="thrustWeightResult">-</strong></article>
+            <article><span>Kalkış uygunluğu</span><strong id="takeoffStatusResult">-</strong></article>
+          </section>
         </section>
       </section>
 
-      <section id="ihaMissionPage" class="page" aria-label="İHA görev operasyonu">
-        <header class="section-header">
+      <section id="imuSimulationPage" class="page" aria-label="IMU Simülasyonu">
+        <header class="page-header">
           <div>
-            <span class="breadcrumb">İHA Sistemleri / Görev Operasyonu</span>
-            <h1>Görev Operasyonu</h1>
-            <p>İHA görev hazırlığı ve operasyon kontrol listesi.</p>
-          </div>
-          <button class="ghost-button" type="button" data-page-target="ihaSystems">İHA Sistemlerine Dön</button>
-        </header>
-        <section class="ops-panel checklist">
-          <label><input type="checkbox"> Görev alanı ve hava durumu kontrol edildi</label>
-          <label><input type="checkbox"> Batarya ve faydalı yük doğrulandı</label>
-          <label><input type="checkbox"> Telemetri ve yer istasyonu bağlantısı hazır</label>
-          <label><input type="checkbox"> Acil durum prosedürü onaylandı</label>
-        </section>
-      </section>
-
-      <section id="ihaAnalysisPage" class="page" aria-label="İHA analiz paneli">
-        <header class="section-header">
-          <div>
-            <span class="breadcrumb">İHA Sistemleri / Analiz Paneli</span>
-            <h1>Analiz Paneli</h1>
-            <p>Uçuş sonrası değerlendirme ve sistem durumu özeti.</p>
-          </div>
-          <button class="ghost-button" type="button" data-page-target="ihaSystems">İHA Sistemlerine Dön</button>
-        </header>
-        <section class="metric-cards">
-          <article><span>Telemetri</span><strong>Hazır</strong></article>
-          <article><span>Uçuş Kaydı</span><strong>Beklemede</strong></article>
-          <article><span>Sistem Sağlığı</span><strong>Nominal</strong></article>
-        </section>
-      </section>
-
-      <section id="rocketMissionPage" class="page" aria-label="Roket görev planlama">
-        <header class="section-header">
-          <div>
-            <span class="breadcrumb">Roket Sistemleri / Görev Planlama</span>
-            <h1>Roket Görev Planlama</h1>
-            <p>Hedef irtifa, saha hazırlığı ve görev akışı.</p>
-          </div>
-          <button class="ghost-button" type="button" data-page-target="rocketSystems">Roket Sistemlerine Dön</button>
-        </header>
-        <section class="ops-panel detail-panel">
-          <h2>Görev Hazırlığı</h2>
-          <p>Roket görev profili ve operasyon adımları bu panelde takip edilir.</p>
-        </section>
-      </section>
-
-      <section id="rocketAnalysisPage" class="page" aria-label="Roket uçuş analizi">
-        <header class="section-header">
-          <div>
-            <span class="breadcrumb">Roket Sistemleri / Uçuş Analizi</span>
-            <h1>Roket Uçuş Analizi</h1>
-            <p>İrtifa, hız ve uçuş sonrası performans değerlendirmesi.</p>
-          </div>
-          <button class="ghost-button" type="button" data-page-target="rocketSystems">Roket Sistemlerine Dön</button>
-        </header>
-        <section class="metric-cards">
-          <article><span>Hedef İrtifa</span><strong>1500 m</strong></article>
-          <article><span>Analiz Durumu</span><strong>Hazır</strong></article>
-          <article><span>Güvenlik</span><strong>Kontrol</strong></article>
-        </section>
-      </section>
-
-      <section id="rocketTestPage" class="page" aria-label="Roket yer testleri">
-        <header class="section-header">
-          <div>
-            <span class="breadcrumb">Roket Sistemleri / Yer Testleri</span>
-            <h1>Roket Yer Testleri</h1>
-            <p>Ateşleme, aviyonik ve saha güvenliği ön kontrol kayıtları.</p>
-          </div>
-          <button class="ghost-button" type="button" data-page-target="rocketSystems">Roket Sistemlerine Dön</button>
-        </header>
-        <section class="ops-panel checklist">
-          <label><input type="checkbox"> Aviyonik güç hattı kontrol edildi</label>
-          <label><input type="checkbox"> Ateşleme güvenlik hattı doğrulandı</label>
-          <label><input type="checkbox"> Saha güvenlik perimetresi hazır</label>
-        </section>
-      </section>
-
-      <section id="imuSimulationPage" class="page" aria-label="İHA IMU Simülasyonu">
-        <header class="section-header">
-          <div>
-            <span class="breadcrumb">İHA Sistemleri / IMU Simülasyonu</span>
+            <p class="breadcrumb">İHA Sistemleri / IMU Simülasyonu</p>
             <h1>Avionix IMU Uçuş Simülasyonu</h1>
-            <p>ESP32-S3 + MPU6050 üzerinden gelen yönelim verileriyle gerçek zamanlı uçak hareket simülasyonu.</p>
+            <p>ESP32-S3 + MPU6050 üzerinden gelen yönelim verileriyle gerçek zamanlı uçak hareket simülasyonu</p>
           </div>
-          <button class="ghost-button" type="button" data-page-target="ihaSystems">İHA Sistemlerine Dön</button>
+          <button type="button" class="secondary-button" data-page-target="ihaSystemsPage">İHA Sistemlerine Dön</button>
         </header>
 
-        <section class="simulation-layout" aria-label="IMU simülasyon arayüzü">
-          <aside class="control-panel" aria-label="Bağlantı paneli">
-            <div class="panel-heading">
-              <span class="eyebrow">Görev Kontrol</span>
+        <section class="simulation-layout">
+          <aside class="imu-panel">
+            <div>
+              <p class="eyebrow">Seri Bağlantı</p>
               <h2>Seri Bağlantı</h2>
             </div>
 
@@ -302,44 +187,29 @@
               <div><dt>Son veri zamanı</dt><dd id="lastDataTime">-</dd></div>
             </dl>
 
-            <section class="readouts" aria-label="Canlı açı değerleri">
-              <article><span>Roll</span><strong><output id="rollValue">0.00</output><small>°</small></strong></article>
-              <article><span>Pitch</span><strong><output id="pitchValue">0.00</output><small>°</small></strong></article>
-              <article><span>Yaw</span><strong><output id="yawValue">0.00</output><small>°</small></strong></article>
+            <section class="readouts">
+              <article><span>Roll</span><strong><output id="rollValue">0.00</output>°</strong></article>
+              <article><span>Pitch</span><strong><output id="pitchValue">0.00</output>°</strong></article>
+              <article><span>Yaw</span><strong><output id="yawValue">0.00</output>°</strong></article>
             </section>
 
-            <button id="calibrateButton" class="wide-button" type="button">Sıfırla / Kalibre Et</button>
+            <button id="calibrateButton" type="button">Sıfırla / Kalibre Et</button>
 
-            <section class="mapping-panel" aria-label="Eksen eşleme ayarları">
-              <div class="panel-heading compact">
-                <span class="eyebrow">Model Ayarları</span>
-                <h2>Eksen Mapping</h2>
-              </div>
-
-              <div class="invert-grid">
-                <label><input id="rollInvert" type="checkbox"> Roll invert</label>
-                <label><input id="pitchInvert" type="checkbox"> Pitch invert</label>
-                <label><input id="yawInvert" type="checkbox"> Yaw invert</label>
-              </div>
-
-              <div class="select-grid">
-                <label for="rollAxis">Roll axis</label>
-                <select id="rollAxis"><option value="x" selected>X</option><option value="y">Y</option><option value="z">Z</option></select>
-                <label for="pitchAxis">Pitch axis</label>
-                <select id="pitchAxis"><option value="x">X</option><option value="y">Y</option><option value="z" selected>Z</option></select>
-                <label for="yawAxis">Yaw axis</label>
-                <select id="yawAxis"><option value="x">X</option><option value="y" selected>Y</option><option value="z">Z</option></select>
-              </div>
+            <section class="model-settings">
+              <h2>Model ayarları</h2>
+              <label><input id="rollInvert" type="checkbox"> Roll invert</label>
+              <label><input id="pitchInvert" type="checkbox"> Pitch invert</label>
+              <label><input id="yawInvert" type="checkbox"> Yaw invert</label>
             </section>
           </aside>
 
-          <section class="viewer-panel" aria-label="3D uçak sahnesi">
-            <div class="viewer-toolbar">
+          <section class="scene-panel">
+            <div class="scene-header">
               <div>
-                <span class="eyebrow">Gerçek Zamanlı Model</span>
-                <h2>3D Uçak Sahnesi</h2>
+                <p class="eyebrow">3D Uçak Sahnesi</p>
+                <h2>Yönelim Görselleştirme</h2>
               </div>
-              <span id="sceneBadge" class="scene-badge">Veri bekleniyor</span>
+              <span id="sceneBadge">Veri bekleniyor</span>
             </div>
             <div class="viewer-wrap">
               <canvas id="sceneCanvas"></canvas>
