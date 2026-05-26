@@ -126,7 +126,7 @@
       </section>
 
       <section id="performancePage" class="page" aria-label="Performans Parametreleri">
-        <header class="page-header">
+        <header class="page-header performance-hero">
           <div>
             <p class="breadcrumb">İHA Sistemleri / Performans Parametreleri</p>
             <h1>Performans Parametreleri</h1>
@@ -135,20 +135,45 @@
           <button type="button" class="secondary-button" data-page-target="ihaSystemsPage">İHA Sistemlerine Dön</button>
         </header>
 
-        <section class="calculator-layout">
-          <form id="performanceForm" class="control-card">
+        <section class="performance-layout">
+          <form id="performanceForm" class="control-card input-panel">
+            <div>
+              <p class="eyebrow">Girdi Paneli</p>
+              <h2>Kalkış Verileri</h2>
+            </div>
             <label>Uçak kalkış ağırlığı (kg)<input id="aircraftWeightKg" type="number" min="0.1" step="0.1" value="3.5"></label>
             <label>Pist uzunluğu (m)<input id="runwayLengthM" type="number" min="1" step="0.1" value="55"></label>
             <button type="submit">Hesapla</button>
           </form>
 
-          <section class="performance-results">
-            <article><span>Stall speed</span><strong id="stallSpeedResult">-</strong></article>
-            <article><span>Güvenli kalkış hızı</span><strong id="takeoffSpeedResult">-</strong></article>
-            <article><span>Gerekli pist uzunluğu</span><strong id="requiredRunwayResult">-</strong></article>
-            <article><span>Kalkış süresi</span><strong id="takeoffTimeResult">-</strong></article>
-            <article><span>İtki / ağırlık oranı</span><strong id="thrustWeightResult">-</strong></article>
-            <article><span>Kalkış uygunluğu</span><strong id="takeoffStatusResult">-</strong></article>
+          <section class="results-card results-panel">
+            <div>
+              <p class="eyebrow">Sonuç Paneli</p>
+              <h2>Kalkış Analizi</h2>
+            </div>
+            <div class="performance-results">
+              <article class="result-card" id="stallSpeedCard">
+                <span>Stall hızı</span>
+                <strong id="stallSpeedKmhResult">-</strong>
+                <small id="stallSpeedMsResult">-</small>
+              </article>
+              <article class="result-card" id="takeoffSpeedCard">
+                <span>Güvenli kalkış hızı</span>
+                <strong id="takeoffSpeedKmhResult">-</strong>
+                <small id="takeoffSpeedMsResult">-</small>
+              </article>
+              <article class="result-card" id="requiredRunwayCard"><span>Gerekli pist uzunluğu</span><strong id="requiredRunwayResult">-</strong></article>
+              <article class="result-card" id="minimumSafeRunwayCard"><span>Minimum güvenli pist uzunluğu</span><strong id="minimumSafeRunwayResult">-</strong></article>
+              <article class="result-card" id="runwayMarginCard"><span>Pist güvenlik payı</span><strong id="runwayMarginResult">-</strong></article>
+              <article class="result-card" id="takeoffTimeCard"><span>Kalkış süresi</span><strong id="takeoffTimeResult">-</strong></article>
+              <article class="result-card" id="takeoffAccelerationCard"><span>Kalkış ivmesi</span><strong id="takeoffAccelerationResult">-</strong></article>
+              <article class="result-card" id="thrustWeightCard"><span>İtki / ağırlık oranı</span><strong id="thrustWeightResult">-</strong></article>
+              <article class="result-card" id="thrustStatusCard"><span>İtki yeterliliği</span><strong id="thrustStatusResult">-</strong></article>
+              <article class="result-card" id="runwayStatusCard"><span>Pist yeterliliği</span><strong id="runwayStatusResult">-</strong></article>
+              <article class="result-card" id="runwayUsageCard"><span>Pist kullanım oranı</span><strong id="runwayUsageResult">-</strong></article>
+              <article class="result-card" id="takeoffDecisionCard"><span>Genel kalkış kararı</span><strong id="takeoffDecisionResult">-</strong></article>
+              <article class="result-card" id="riskLevelCard"><span>Risk seviyesi</span><strong id="riskLevelResult">-</strong></article>
+            </div>
           </section>
         </section>
       </section>

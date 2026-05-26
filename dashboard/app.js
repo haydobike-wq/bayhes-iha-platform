@@ -72,6 +72,10 @@ elements.connectButton.addEventListener("click", connectSerial);
 elements.disconnectButton.addEventListener("click", () => disconnectSerial("Bağlantı kesildi"));
 elements.calibrateButton.addEventListener("click", calibrateView);
 window.addEventListener("resize", resizeRenderer);
+window.addEventListener("popstate", (event) => {
+  const pageId = event.state?.page || getInitialPageId();
+  showPage(pageId, false);
+});
 window.addEventListener("beforeunload", () => {
   imuState.keepReading = false;
   imuState.reader?.cancel().catch(() => {});
@@ -105,11 +109,18 @@ scene.add(axes);
 const aircraft = createAircraft();
 scene.add(aircraft);
 
-showPage("homePage");
+const initialPage = getInitialPageId();
+history.replaceState({ page: initialPage }, "", `#${initialPage}`);
+showPage(initialPage, false);
 updateReadouts();
 animate();
 
-function showPage(pageId) {
+function getInitialPageId() {
+  const hashPage = window.location.hash.replace("#", "");
+  return document.querySelector(`#${hashPage}`)?.classList.contains("page") ? hashPage : "homePage";
+}
+
+function showPage(pageId, pushHistory = true) {
   const target = document.querySelector(`#${pageId}`);
   if (!target) return;
 
@@ -131,6 +142,9 @@ function showPage(pageId) {
   };
 
   document.title = titles[pageId] ?? titles.homePage;
+  if (pushHistory && window.location.hash !== `#${pageId}`) {
+    history.pushState({ page: pageId }, "", `#${pageId}`);
+  }
   window.scrollTo(0, 0);
   resizeRenderer();
 }
@@ -174,7 +188,7 @@ function handlePerformanceSubmit(event) {
   const c = performanceConstants;
 
   if (![massKg, runwayLength].every(Number.isFinite) || massKg <= 0 || runwayLength <= 0) {
-    setPerformanceResults("Geçersiz veri", "-", "-", "-", "-", "-");
+    resetPerformanceResults("Geçersiz veri");
     return;
   }
 
@@ -190,28 +204,89 @@ function handlePerformanceSubmit(event) {
   const requiredRunway = acceleration > 0 ? (takeoffSpeed * takeoffSpeed) / (2 * acceleration) : Infinity;
   const takeoffTime = acceleration > 0 ? takeoffSpeed / acceleration : Infinity;
   const thrustWeightRatio = c.motorThrust / weightN;
-  const isSuitable = Number.isFinite(requiredRunway) && runwayLength >= requiredRunway;
+  const minimumSafeRunway = Number.isFinite(requiredRunway) ? requiredRunway * 1.20 : Infinity;
+  const runwayMargin = runwayLength - minimumSafeRunway;
+  const runwayIsEnough = Number.isFinite(minimumSafeRunway) && runwayLength >= minimumSafeRunway;
+  const runwayUsage = Number.isFinite(minimumSafeRunway) ? (minimumSafeRunway / runwayLength) * 100 : Infinity;
 
-  setPerformanceResults(
-    `${stallSpeed.toFixed(2)} m/s`,
-    `${takeoffSpeed.toFixed(2)} m/s`,
-    Number.isFinite(requiredRunway) ? `${requiredRunway.toFixed(1)} m` : "Yetersiz itki",
-    Number.isFinite(takeoffTime) ? `${takeoffTime.toFixed(1)} s` : "-",
-    thrustWeightRatio.toFixed(2),
-    isSuitable ? "Uygun" : "Uygun değil",
-  );
+  let thrustStatus = "YETERSİZ";
+  let thrustTone = "bad";
+  if (thrustWeightRatio >= 0.55) {
+    thrustStatus = "YETERLİ";
+    thrustTone = "ok";
+  } else if (thrustWeightRatio >= 0.40) {
+    thrustStatus = "SINIRDA";
+    thrustTone = "warn";
+  }
 
-  document.querySelector("#takeoffStatusResult").classList.toggle("ok", isSuitable);
-  document.querySelector("#takeoffStatusResult").classList.toggle("bad", !isSuitable);
+  const runwayStatus = runwayIsEnough ? "YETERLİ" : "YETERSİZ";
+  const runwayTone = runwayIsEnough ? "ok" : "bad";
+
+  let decision = "KALKIŞ RİSKLİ / UYGUN DEĞİL";
+  let decisionTone = "bad";
+  let risk = "YÜKSEK";
+  let riskTone = "bad";
+
+  if (runwayIsEnough && thrustStatus === "YETERLİ") {
+    decision = "KALKIŞ UYGUN";
+    decisionTone = "ok";
+    risk = "DÜŞÜK";
+    riskTone = "ok";
+  } else if (runwayIsEnough && thrustStatus === "SINIRDA") {
+    decision = "KALKIŞ SINIRDA";
+    decisionTone = "warn";
+    risk = "ORTA";
+    riskTone = "warn";
+  }
+
+  setText("#stallSpeedMsResult", `${stallSpeed.toFixed(2)} m/s`);
+  setText("#stallSpeedKmhResult", `${(stallSpeed * 3.6).toFixed(1)} km/h`);
+  setText("#takeoffSpeedMsResult", `${takeoffSpeed.toFixed(2)} m/s`);
+  setText("#takeoffSpeedKmhResult", `${(takeoffSpeed * 3.6).toFixed(1)} km/h`);
+  setText("#requiredRunwayResult", Number.isFinite(requiredRunway) ? `${requiredRunway.toFixed(1)} m` : "Yetersiz itki");
+  setText("#minimumSafeRunwayResult", Number.isFinite(minimumSafeRunway) ? `${minimumSafeRunway.toFixed(1)} m` : "-");
+  setText("#runwayMarginResult", Number.isFinite(runwayMargin) ? `${runwayMargin.toFixed(1)} m` : "-");
+  setText("#takeoffTimeResult", Number.isFinite(takeoffTime) ? `${takeoffTime.toFixed(1)} s` : "-");
+  setText("#takeoffAccelerationResult", acceleration > 0 ? `${acceleration.toFixed(2)} m/s²` : "Yetersiz");
+  setText("#thrustWeightResult", thrustWeightRatio.toFixed(2));
+  setText("#thrustStatusResult", thrustStatus);
+  setText("#runwayStatusResult", runwayStatus);
+  setText("#runwayUsageResult", Number.isFinite(runwayUsage) ? `%${runwayUsage.toFixed(0)}` : "-");
+  setText("#takeoffDecisionResult", decision);
+  setText("#riskLevelResult", risk);
+
+  setCardTone("#thrustStatusCard", thrustTone);
+  setCardTone("#runwayStatusCard", runwayTone);
+  setCardTone("#takeoffDecisionCard", decisionTone);
+  setCardTone("#riskLevelCard", riskTone);
+  setCardTone("#runwayMarginCard", runwayIsEnough ? "ok" : "bad");
+  setCardTone("#runwayUsageCard", runwayUsage <= 80 ? "ok" : runwayUsage <= 100 ? "warn" : "bad");
 }
 
-function setPerformanceResults(stall, takeoff, runway, time, thrustWeight, status) {
-  setText("#stallSpeedResult", stall);
-  setText("#takeoffSpeedResult", takeoff);
-  setText("#requiredRunwayResult", runway);
-  setText("#takeoffTimeResult", time);
-  setText("#thrustWeightResult", thrustWeight);
-  setText("#takeoffStatusResult", status);
+function resetPerformanceResults(message) {
+  [
+    "#stallSpeedMsResult",
+    "#stallSpeedKmhResult",
+    "#takeoffSpeedMsResult",
+    "#takeoffSpeedKmhResult",
+    "#requiredRunwayResult",
+    "#minimumSafeRunwayResult",
+    "#runwayMarginResult",
+    "#takeoffTimeResult",
+    "#takeoffAccelerationResult",
+    "#thrustWeightResult",
+    "#thrustStatusResult",
+    "#runwayStatusResult",
+    "#runwayUsageResult",
+    "#takeoffDecisionResult",
+    "#riskLevelResult",
+  ].forEach((selector) => setText(selector, selector === "#takeoffDecisionResult" ? message : "-"));
+}
+
+function setCardTone(selector, tone) {
+  const card = document.querySelector(selector);
+  card.classList.remove("tone-ok", "tone-warn", "tone-bad");
+  card.classList.add(`tone-${tone}`);
 }
 
 function setText(selector, value) {

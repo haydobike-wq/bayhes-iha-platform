@@ -1,6 +1,7 @@
 :root {
   color-scheme: dark;
   --bg: #070d16;
+  --bg-soft: #0b1420;
   --panel: #101a27;
   --panel-soft: #152233;
   --accent: #35c7df;
@@ -105,9 +106,10 @@ dl {
 .scene-panel,
 .info-bar,
 .site-footer {
-  background: rgba(16, 26, 39, 0.92);
+  background: rgba(16, 26, 39, 0.86);
   border: 1px solid var(--border);
   border-radius: 8px;
+  backdrop-filter: blur(12px);
 }
 
 .home-hero {
@@ -224,6 +226,10 @@ dl {
   padding: 20px;
 }
 
+.performance-hero {
+  min-height: 150px;
+}
+
 .page-header h1 {
   font-size: clamp(26px, 4vw, 40px);
   line-height: 1.1;
@@ -239,11 +245,23 @@ dl {
   grid-template-columns: minmax(290px, 380px) minmax(0, 1fr);
 }
 
+.performance-layout {
+  align-items: start;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+}
+
 .control-card,
 .results-card {
   display: grid;
   gap: 14px;
   padding: 18px;
+}
+
+.input-panel,
+.results-panel {
+  align-self: start;
 }
 
 .control-card label {
@@ -284,14 +302,20 @@ dd {
 .performance-results {
   display: grid;
   gap: 12px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(150px, 1fr));
 }
 
 .performance-results article {
+  background: rgba(11, 20, 32, 0.82);
+  border-color: var(--border);
   display: grid;
   gap: 10px;
-  min-height: 120px;
+  min-height: 116px;
   padding: 16px;
+}
+
+.result-card {
+  border-left: 3px solid rgba(53, 199, 223, 0.42);
 }
 
 .performance-results span,
@@ -301,7 +325,37 @@ dd {
 }
 
 .performance-results strong {
-  font-size: 24px;
+  font-size: clamp(20px, 2.2vw, 28px);
+  line-height: 1.08;
+}
+
+.performance-results small {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.result-card.tone-ok {
+  border-left-color: var(--success);
+}
+
+.result-card.tone-ok strong {
+  color: var(--success);
+}
+
+.result-card.tone-warn {
+  border-left-color: var(--warning);
+}
+
+.result-card.tone-warn strong {
+  color: var(--warning);
+}
+
+.result-card.tone-bad {
+  border-left-color: var(--danger);
+}
+
+.result-card.tone-bad strong {
+  color: var(--danger);
 }
 
 .simulation-layout {
@@ -445,12 +499,16 @@ dd {
   .system-grid,
   .two-column,
   .calculator-layout,
-  .simulation-layout {
+  .simulation-layout,
+  .performance-layout {
     grid-template-columns: 1fr;
   }
 
-  .module-grid,
   .performance-results {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .module-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
