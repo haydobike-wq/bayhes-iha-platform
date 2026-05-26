@@ -4,6 +4,7 @@ const BAUD_RATE = 115200;
 const STALE_DATA_MS = 1800;
 
 const state = {
+  activePage: "home",
   raw: { roll: 0, pitch: 0, yaw: 0 },
   offset: { roll: 0, pitch: 0, yaw: 0 },
   lastDataAt: null,
@@ -34,6 +35,12 @@ const elements = {
   rollAxis: document.querySelector("#rollAxis"),
   pitchAxis: document.querySelector("#pitchAxis"),
   yawAxis: document.querySelector("#yawAxis"),
+  pages: {
+    home: document.querySelector("#homePage"),
+    rocketModules: document.querySelector("#rocketModulesPage"),
+    ihaModules: document.querySelector("#ihaModulesPage"),
+    imuSimulation: document.querySelector("#imuSimulationPage"),
+  },
 };
 
 const serialSupported = "serial" in navigator;
@@ -41,8 +48,21 @@ elements.supportWarning.classList.toggle("hidden", serialSupported);
 elements.connectButton.disabled = !serialSupported;
 
 elements.connectButton.addEventListener("click", connectSerial);
-elements.disconnectButton.addEventListener("click", () => disconnectSerial("Baglanti kesildi."));
+elements.disconnectButton.addEventListener("click", () => disconnectSerial("Bağlantı kesildi."));
 elements.calibrateButton.addEventListener("click", calibrateView);
+document.querySelectorAll("[data-page-target]").forEach((control) => {
+  control.addEventListener("click", (event) => {
+    const target = event.currentTarget.dataset.pageTarget;
+    showPage(target);
+  });
+
+  control.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      showPage(event.currentTarget.dataset.pageTarget);
+    }
+  });
+});
 window.addEventListener("resize", resizeRenderer);
 window.addEventListener("beforeunload", () => {
   state.keepReading = false;
@@ -84,11 +104,36 @@ scene.add(aircraft);
 
 resizeRenderer();
 updateReadouts();
+showPage("home");
 animate();
+
+function showPage(pageName) {
+  if (!elements.pages[pageName]) return;
+
+  if (state.activePage === "imuSimulation" && pageName !== "imuSimulation" && state.port) {
+    disconnectSerial("IMU ekranından çıkıldı. Bağlantı kapatıldı.");
+  }
+
+  state.activePage = pageName;
+  for (const [name, page] of Object.entries(elements.pages)) {
+    page.classList.toggle("page-active", name === pageName);
+  }
+
+  const titles = {
+    home: "Avionix Aerospace Görev ve Operasyon Paneli",
+    rocketModules: "Avionix Roket Sistemleri",
+    ihaModules: "Avionix İHA Sistemleri",
+    imuSimulation: "Avionix IMU Uçuş Simülasyonu",
+  };
+
+  document.title = titles[pageName] ?? titles.home;
+  window.scrollTo({ top: 0, behavior: "instant" });
+  resizeRenderer();
+}
 
 async function connectSerial() {
   if (!serialSupported) {
-    showMessage("Web Serial API desteklenmiyor. Lutfen Chrome veya Edge kullanin.", true);
+    showMessage("Web Serial API desteklenmiyor. Lütfen Chrome veya Edge kullanın.", true);
     return;
   }
 
@@ -100,15 +145,15 @@ async function connectSerial() {
     await state.port.open({ baudRate: BAUD_RATE });
     state.keepReading = true;
     state.disconnecting = false;
-    setConnectionStatus("Baglandi", "online");
+    setConnectionStatus("Bağlandı", "online");
     setButtons(true);
     readSerialLoop();
   } catch (error) {
     const message = error?.name === "NotFoundError"
-      ? "Port secimi iptal edildi. Baglanmak icin tekrar deneyebilirsiniz."
-      : `Baglanti acilamadi: ${error.message || "Bilinmeyen hata"}`;
+      ? "Port seçimi iptal edildi. Bağlanmak için tekrar deneyebilirsiniz."
+      : `Bağlantı açılamadı: ${error.message || "Bilinmeyen hata"}`;
     showMessage(message, true);
-    setConnectionStatus("Bagli degil", "offline");
+    setConnectionStatus("Bağlı değil", "offline");
     setButtons(false);
   }
 }
@@ -137,19 +182,19 @@ async function readSerialLoop() {
     }
   } catch (error) {
     if (!state.disconnecting) {
-      showMessage(`Baglanti kesildi: ${error.message || "Cihazdan veri okunamadi."}`, true);
-      setConnectionStatus("Baglanti kesildi", "error");
+      showMessage(`Bağlantı kesildi: ${error.message || "Cihazdan veri okunamadı."}`, true);
+      setConnectionStatus("Bağlantı kesildi", "error");
     }
   } finally {
     await closeSerialResources();
     if (!state.disconnecting) {
       setButtons(false);
-      setConnectionStatus("Baglanti kesildi", "error");
+      setConnectionStatus("Bağlantı kesildi", "error");
     }
   }
 }
 
-async function disconnectSerial(message = "Baglanti kesildi.") {
+async function disconnectSerial(message = "Bağlantı kesildi.") {
   state.disconnecting = true;
   state.keepReading = false;
   setButtons(false);
@@ -161,7 +206,7 @@ async function disconnectSerial(message = "Baglanti kesildi.") {
   }
 
   await closeSerialResources();
-  setConnectionStatus("Bagli degil", "offline");
+  setConnectionStatus("Bağlı değil", "offline");
   showMessage(message, false);
   state.disconnecting = false;
 }
@@ -235,7 +280,7 @@ function applyOrientation(next) {
 function calibrateView() {
   state.offset = { ...state.raw };
   updateReadouts();
-  showMessage("Kalibrasyon uygulandi. Mevcut acilar artik model referansi.", false);
+  showMessage("Kalibrasyon uygulandı. Mevcut açılar artık model referansı.", false);
 }
 
 function getDisplayAngles() {
@@ -259,7 +304,7 @@ function updateReadouts() {
 
 function updateDataStatus() {
   const hasRecentData = state.lastDataAt && Date.now() - state.lastDataAt < STALE_DATA_MS;
-  const label = hasRecentData ? "Canli veri" : "Veri bekleniyor";
+  const label = hasRecentData ? "Canlı veri" : "Veri bekleniyor";
   elements.dataStatus.textContent = label;
   elements.sceneBadge.textContent = label;
   elements.sceneBadge.classList.toggle("live", Boolean(hasRecentData));

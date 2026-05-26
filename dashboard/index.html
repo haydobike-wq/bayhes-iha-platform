@@ -3,124 +3,199 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Avionix IMU Ucus Simulasyonu</title>
+    <title>Avionix Aerospace Görev ve Operasyon Paneli</title>
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
     <main class="app-shell">
-      <header class="topbar" aria-label="Avionix Operasyon Paneli">
-        <div class="brand-block">
-          <span class="eyebrow">Avionix Operasyon Paneli</span>
-          <h1>Avionix IMU Ucus Simulasyonu</h1>
-          <p>ESP32-S3 + MPU6050 uzerinden gelen yonelim verileriyle gercek zamanli ucak hareket simulasyonu</p>
-        </div>
-        <nav class="main-nav" aria-label="Ana menu">
-          <a class="nav-link" href="#imu-simulation" aria-current="page">IMU Simulasyonu</a>
-        </nav>
-      </header>
-
-      <section id="imu-simulation" class="simulation-layout" aria-label="IHA IMU Simulasyonu">
-        <aside class="control-panel" aria-label="Baglanti paneli">
-          <div class="panel-heading">
-            <span class="eyebrow">IHA IMU Simulasyonu</span>
-            <h2>Seri Baglanti</h2>
+      <section id="homePage" class="page page-active" aria-label="Ana sayfa">
+        <header class="topbar" aria-label="Avionix Operasyon Paneli">
+          <div class="brand-block">
+            <span class="eyebrow">Avionix Operasyon Paneli</span>
+            <h1>Avionix Aerospace Görev ve Operasyon Paneli</h1>
+            <p>Roket ve İHA sistemleri için görev, test ve operasyon modüllerini tek merkezden yönetin.</p>
           </div>
+        </header>
 
-          <div id="supportWarning" class="notice hidden" role="alert">
-            Web Serial API bu tarayicida desteklenmiyor. Lutfen Chrome veya Edge kullanin.
+        <section class="category-grid" aria-label="Sistem kategorileri">
+          <article class="module-card system-card" tabindex="0" data-page-target="rocketModules">
+            <span class="card-icon">RKT</span>
+            <div>
+              <h2>Roket Sistemleri</h2>
+              <p>Roket görevleri, yer testleri ve operasyon destek ekranları.</p>
+            </div>
+            <button type="button" data-page-target="rocketModules">Modülleri Gör</button>
+          </article>
+
+          <article class="module-card system-card" tabindex="0" data-page-target="ihaModules">
+            <span class="card-icon">IHA</span>
+            <div>
+              <h2>İHA Sistemleri</h2>
+              <p>Uçuş, telemetri, sensör ve simülasyon tabanlı İHA operasyon modülleri.</p>
+            </div>
+            <button type="button" data-page-target="ihaModules">Modülleri Gör</button>
+          </article>
+        </section>
+      </section>
+
+      <section id="rocketModulesPage" class="page" aria-label="Roket sistemleri">
+        <header class="topbar">
+          <div class="brand-block">
+            <span class="eyebrow">Roket Sistemleri</span>
+            <h1>Roket Modülleri</h1>
+            <p>Roket operasyon modülleri bu alanda listelenecek.</p>
           </div>
+          <nav class="main-nav" aria-label="Sayfa navigasyonu">
+            <button class="nav-link" type="button" data-page-target="home">Ana Sayfaya Dön</button>
+          </nav>
+        </header>
 
-          <div id="messageBox" class="notice notice-warning hidden" role="status"></div>
+        <section class="empty-panel">
+          <h2>Hazır modül bulunmuyor</h2>
+          <p>Roket Sistemleri kategorisi korundu. Yeni roket modülleri buraya eklenebilir.</p>
+        </section>
+      </section>
 
-          <div class="button-row">
-            <button id="connectButton" type="button">Cihaza Baglan</button>
-            <button id="disconnectButton" type="button" disabled>Baglantiyi Kes</button>
+      <section id="ihaModulesPage" class="page" aria-label="İHA sistemleri">
+        <header class="topbar">
+          <div class="brand-block">
+            <span class="eyebrow">İHA Sistemleri</span>
+            <h1>İHA Modülleri</h1>
+            <p>İHA operasyonları için sensör, simülasyon ve görev destek ekranları.</p>
           </div>
+          <nav class="main-nav" aria-label="Sayfa navigasyonu">
+            <button class="nav-link" type="button" data-page-target="home">Ana Sayfaya Dön</button>
+          </nav>
+        </header>
 
-          <dl class="status-list">
+        <section class="module-grid" aria-label="İHA modülleri">
+          <article class="module-card imu-module-card" tabindex="0" data-page-target="imuSimulation">
+            <span class="card-icon">IMU</span>
             <div>
-              <dt>Durum</dt>
-              <dd id="connectionStatus" class="status status-offline">Bagli degil</dd>
+              <h2>IMU Simülasyonu</h2>
+              <p>ESP32-S3 + MPU6050 üzerinden gelen roll, pitch, yaw verileriyle gerçek zamanlı 3D uçak yönelim simülasyonu.</p>
             </div>
-            <div>
-              <dt>Baud rate</dt>
-              <dd>115200</dd>
-            </div>
-            <div>
-              <dt>Veri durumu</dt>
-              <dd id="dataStatus">Veri bekleniyor</dd>
-            </div>
-            <div>
-              <dt>Son veri zamani</dt>
-              <dd id="lastDataTime">-</dd>
-            </div>
-          </dl>
+            <button type="button" data-page-target="imuSimulation">Simülasyonu Aç</button>
+          </article>
+        </section>
+      </section>
 
-          <section class="readouts" aria-label="Canli aci degerleri">
-            <article>
-              <span>Roll</span>
-              <strong><output id="rollValue">0.00</output><small>deg</small></strong>
-            </article>
-            <article>
-              <span>Pitch</span>
-              <strong><output id="pitchValue">0.00</output><small>deg</small></strong>
-            </article>
-            <article>
-              <span>Yaw</span>
-              <strong><output id="yawValue">0.00</output><small>deg</small></strong>
-            </article>
+      <section id="imuSimulationPage" class="page" aria-label="İHA IMU Simülasyonu">
+        <header class="topbar" aria-label="IMU simülasyon başlığı">
+          <div class="brand-block">
+            <span class="eyebrow">İHA IMU Simülasyonu</span>
+            <h1>Avionix IMU Uçuş Simülasyonu</h1>
+            <p>ESP32-S3 + MPU6050 üzerinden gelen yönelim verileriyle gerçek zamanlı uçak hareket simülasyonu</p>
+          </div>
+          <nav class="main-nav nav-stack" aria-label="Sayfa navigasyonu">
+            <button class="nav-link" type="button" data-page-target="ihaModules">İHA Sistemlerine Dön</button>
+            <button class="nav-link" type="button" data-page-target="home">Ana Sayfaya Dön</button>
+          </nav>
+        </header>
+
+        <section class="simulation-layout" aria-label="IMU simülasyon arayüzü">
+          <aside class="control-panel" aria-label="Bağlantı paneli">
+            <div class="panel-heading">
+              <span class="eyebrow">İHA IMU Simülasyonu</span>
+              <h2>Seri Bağlantı</h2>
+            </div>
+
+            <div id="supportWarning" class="notice hidden" role="alert">
+              Web Serial API bu tarayıcıda desteklenmiyor. Lütfen Chrome veya Edge kullanın.
+            </div>
+
+            <div id="messageBox" class="notice notice-warning hidden" role="status"></div>
+
+            <div class="button-row">
+              <button id="connectButton" type="button">Cihaza Bağlan</button>
+              <button id="disconnectButton" type="button" disabled>Bağlantıyı Kes</button>
+            </div>
+
+            <dl class="status-list">
+              <div>
+                <dt>Durum</dt>
+                <dd id="connectionStatus" class="status status-offline">Bağlı değil</dd>
+              </div>
+              <div>
+                <dt>Baud rate</dt>
+                <dd>115200</dd>
+              </div>
+              <div>
+                <dt>Veri durumu</dt>
+                <dd id="dataStatus">Veri bekleniyor</dd>
+              </div>
+              <div>
+                <dt>Son veri zamanı</dt>
+                <dd id="lastDataTime">-</dd>
+              </div>
+            </dl>
+
+            <section class="readouts" aria-label="Canlı açı değerleri">
+              <article>
+                <span>Roll</span>
+                <strong><output id="rollValue">0.00</output><small>°</small></strong>
+              </article>
+              <article>
+                <span>Pitch</span>
+                <strong><output id="pitchValue">0.00</output><small>°</small></strong>
+              </article>
+              <article>
+                <span>Yaw</span>
+                <strong><output id="yawValue">0.00</output><small>°</small></strong>
+              </article>
+            </section>
+
+            <button id="calibrateButton" class="wide-button" type="button">Sıfırla / Kalibre Et</button>
+
+            <section class="mapping-panel" aria-label="Eksen eşleme ayarları">
+              <div class="panel-heading compact">
+                <span class="eyebrow">Model Ayarları</span>
+                <h2>Eksen Mapping</h2>
+              </div>
+
+              <div class="invert-grid">
+                <label><input id="rollInvert" type="checkbox"> Roll invert</label>
+                <label><input id="pitchInvert" type="checkbox"> Pitch invert</label>
+                <label><input id="yawInvert" type="checkbox"> Yaw invert</label>
+              </div>
+
+              <div class="select-grid">
+                <label for="rollAxis">Roll axis</label>
+                <select id="rollAxis">
+                  <option value="x" selected>X</option>
+                  <option value="y">Y</option>
+                  <option value="z">Z</option>
+                </select>
+
+                <label for="pitchAxis">Pitch axis</label>
+                <select id="pitchAxis">
+                  <option value="x">X</option>
+                  <option value="y">Y</option>
+                  <option value="z" selected>Z</option>
+                </select>
+
+                <label for="yawAxis">Yaw axis</label>
+                <select id="yawAxis">
+                  <option value="x">X</option>
+                  <option value="y" selected>Y</option>
+                  <option value="z">Z</option>
+                </select>
+              </div>
+            </section>
+          </aside>
+
+          <section class="viewer-panel" aria-label="3D uçak sahnesi">
+            <div class="viewer-toolbar">
+              <div>
+                <span class="eyebrow">Gerçek Zamanlı Model</span>
+                <h2>Uçak Sahnesi</h2>
+              </div>
+              <span id="sceneBadge" class="scene-badge">Veri bekleniyor</span>
+            </div>
+            <div class="viewer-wrap">
+              <canvas id="sceneCanvas"></canvas>
+            </div>
           </section>
-
-          <button id="calibrateButton" class="wide-button" type="button">Sifirla / Kalibre Et</button>
-
-          <section class="mapping-panel" aria-label="Eksen esleme ayarlari">
-            <div class="panel-heading compact">
-              <span class="eyebrow">Model Ayarlari</span>
-              <h2>Eksen Mapping</h2>
-            </div>
-
-            <div class="invert-grid">
-              <label><input id="rollInvert" type="checkbox"> Roll invert</label>
-              <label><input id="pitchInvert" type="checkbox"> Pitch invert</label>
-              <label><input id="yawInvert" type="checkbox"> Yaw invert</label>
-            </div>
-
-            <div class="select-grid">
-              <label for="rollAxis">Roll axis</label>
-              <select id="rollAxis">
-                <option value="x" selected>X</option>
-                <option value="y">Y</option>
-                <option value="z">Z</option>
-              </select>
-
-              <label for="pitchAxis">Pitch axis</label>
-              <select id="pitchAxis">
-                <option value="x">X</option>
-                <option value="y">Y</option>
-                <option value="z" selected>Z</option>
-              </select>
-
-              <label for="yawAxis">Yaw axis</label>
-              <select id="yawAxis">
-                <option value="x">X</option>
-                <option value="y" selected>Y</option>
-                <option value="z">Z</option>
-              </select>
-            </div>
-          </section>
-        </aside>
-
-        <section class="viewer-panel" aria-label="3D ucak sahnesi">
-          <div class="viewer-toolbar">
-            <div>
-              <span class="eyebrow">Gercek Zamanli Model</span>
-              <h2>Ucak Sahnesi</h2>
-            </div>
-            <span id="sceneBadge" class="scene-badge">Veri bekleniyor</span>
-          </div>
-          <div class="viewer-wrap">
-            <canvas id="sceneCanvas"></canvas>
-          </div>
         </section>
       </section>
     </main>
