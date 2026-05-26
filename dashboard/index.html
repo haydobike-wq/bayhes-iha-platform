@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Avionix IMU Ucus Simulasyonu</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar" aria-label="Avionix Operasyon Paneli">
+        <div class="brand-block">
+          <span class="eyebrow">Avionix Operasyon Paneli</span>
+          <h1>Avionix IMU Ucus Simulasyonu</h1>
+          <p>ESP32-S3 + MPU6050 uzerinden gelen yonelim verileriyle gercek zamanli ucak hareket simulasyonu</p>
+        </div>
+        <nav class="main-nav" aria-label="Ana menu">
+          <a class="nav-link" href="#imu-simulation" aria-current="page">IMU Simulasyonu</a>
+        </nav>
+      </header>
+
+      <section id="imu-simulation" class="simulation-layout" aria-label="IHA IMU Simulasyonu">
+        <aside class="control-panel" aria-label="Baglanti paneli">
+          <div class="panel-heading">
+            <span class="eyebrow">IHA IMU Simulasyonu</span>
+            <h2>Seri Baglanti</h2>
+          </div>
+
+          <div id="supportWarning" class="notice hidden" role="alert">
+            Web Serial API bu tarayicida desteklenmiyor. Lutfen Chrome veya Edge kullanin.
+          </div>
+
+          <div id="messageBox" class="notice notice-warning hidden" role="status"></div>
+
+          <div class="button-row">
+            <button id="connectButton" type="button">Cihaza Baglan</button>
+            <button id="disconnectButton" type="button" disabled>Baglantiyi Kes</button>
+          </div>
+
+          <dl class="status-list">
+            <div>
+              <dt>Durum</dt>
+              <dd id="connectionStatus" class="status status-offline">Bagli degil</dd>
+            </div>
+            <div>
+              <dt>Baud rate</dt>
+              <dd>115200</dd>
+            </div>
+            <div>
+              <dt>Veri durumu</dt>
+              <dd id="dataStatus">Veri bekleniyor</dd>
+            </div>
+            <div>
+              <dt>Son veri zamani</dt>
+              <dd id="lastDataTime">-</dd>
+            </div>
+          </dl>
+
+          <section class="readouts" aria-label="Canli aci degerleri">
+            <article>
+              <span>Roll</span>
+              <strong><output id="rollValue">0.00</output><small>deg</small></strong>
+            </article>
+            <article>
+              <span>Pitch</span>
+              <strong><output id="pitchValue">0.00</output><small>deg</small></strong>
+            </article>
+            <article>
+              <span>Yaw</span>
+              <strong><output id="yawValue">0.00</output><small>deg</small></strong>
+            </article>
+          </section>
+
+          <button id="calibrateButton" class="wide-button" type="button">Sifirla / Kalibre Et</button>
+
+          <section class="mapping-panel" aria-label="Eksen esleme ayarlari">
+            <div class="panel-heading compact">
+              <span class="eyebrow">Model Ayarlari</span>
+              <h2>Eksen Mapping</h2>
+            </div>
+
+            <div class="invert-grid">
+              <label><input id="rollInvert" type="checkbox"> Roll invert</label>
+              <label><input id="pitchInvert" type="checkbox"> Pitch invert</label>
+              <label><input id="yawInvert" type="checkbox"> Yaw invert</label>
+            </div>
+
+            <div class="select-grid">
+              <label for="rollAxis">Roll axis</label>
+              <select id="rollAxis">
+                <option value="x" selected>X</option>
+                <option value="y">Y</option>
+                <option value="z">Z</option>
+              </select>
+
+              <label for="pitchAxis">Pitch axis</label>
+              <select id="pitchAxis">
+                <option value="x">X</option>
+                <option value="y">Y</option>
+                <option value="z" selected>Z</option>
+              </select>
+
+              <label for="yawAxis">Yaw axis</label>
+              <select id="yawAxis">
+                <option value="x">X</option>
+                <option value="y" selected>Y</option>
+                <option value="z">Z</option>
+              </select>
+            </div>
+          </section>
+        </aside>
+
+        <section class="viewer-panel" aria-label="3D ucak sahnesi">
+          <div class="viewer-toolbar">
+            <div>
+              <span class="eyebrow">Gercek Zamanli Model</span>
+              <h2>Ucak Sahnesi</h2>
+            </div>
+            <span id="sceneBadge" class="scene-badge">Veri bekleniyor</span>
+          </div>
+          <div class="viewer-wrap">
+            <canvas id="sceneCanvas"></canvas>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
