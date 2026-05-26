@@ -37,8 +37,7 @@ const elements = {
   yawAxis: document.querySelector("#yawAxis"),
   pages: {
     home: document.querySelector("#homePage"),
-    rocketModules: document.querySelector("#rocketModulesPage"),
-    ihaModules: document.querySelector("#ihaModulesPage"),
+    ihaSystems: document.querySelector("#ihaSystemsPage"),
     imuSimulation: document.querySelector("#imuSimulationPage"),
   },
 };
@@ -121,8 +120,7 @@ function showPage(pageName) {
 
   const titles = {
     home: "Avionix Aerospace Görev ve Operasyon Paneli",
-    rocketModules: "Avionix Roket Sistemleri",
-    ihaModules: "Avionix İHA Sistemleri",
+    ihaSystems: "Avionix İHA Sistemleri",
     imuSimulation: "Avionix IMU Uçuş Simülasyonu",
   };
 

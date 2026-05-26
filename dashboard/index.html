@@ -18,57 +18,48 @@
         </header>
 
         <section class="category-grid" aria-label="Sistem kategorileri">
-          <article class="module-card system-card" tabindex="0" data-page-target="rocketModules">
+          <article class="module-card system-card" tabindex="0">
             <span class="card-icon">RKT</span>
             <div>
               <h2>Roket Sistemleri</h2>
               <p>Roket görevleri, yer testleri ve operasyon destek ekranları.</p>
             </div>
-            <button type="button" data-page-target="rocketModules">Modülleri Gör</button>
+            <button type="button">Modülleri Gör</button>
           </article>
 
-          <article class="module-card system-card" tabindex="0" data-page-target="ihaModules">
+          <article class="module-card system-card" tabindex="0" data-page-target="ihaSystems">
             <span class="card-icon">IHA</span>
             <div>
               <h2>İHA Sistemleri</h2>
               <p>Uçuş, telemetri, sensör ve simülasyon tabanlı İHA operasyon modülleri.</p>
             </div>
-            <button type="button" data-page-target="ihaModules">Modülleri Gör</button>
+            <button type="button" data-page-target="ihaSystems">Modülleri Gör</button>
           </article>
         </section>
       </section>
 
-      <section id="rocketModulesPage" class="page" aria-label="Roket sistemleri">
-        <header class="topbar">
-          <div class="brand-block">
-            <span class="eyebrow">Roket Sistemleri</span>
-            <h1>Roket Modülleri</h1>
-            <p>Roket operasyon modülleri bu alanda listelenecek.</p>
-          </div>
-          <nav class="main-nav" aria-label="Sayfa navigasyonu">
-            <button class="nav-link" type="button" data-page-target="home">Ana Sayfaya Dön</button>
-          </nav>
-        </header>
-
-        <section class="empty-panel">
-          <h2>Hazır modül bulunmuyor</h2>
-          <p>Roket Sistemleri kategorisi korundu. Yeni roket modülleri buraya eklenebilir.</p>
-        </section>
-      </section>
-
-      <section id="ihaModulesPage" class="page" aria-label="İHA sistemleri">
+      <section id="ihaSystemsPage" class="page" aria-label="İHA sistemleri">
         <header class="topbar">
           <div class="brand-block">
             <span class="eyebrow">İHA Sistemleri</span>
-            <h1>İHA Modülleri</h1>
-            <p>İHA operasyonları için sensör, simülasyon ve görev destek ekranları.</p>
+            <h1>İHA Sistemleri</h1>
+            <p>İHA operasyonları için performans hesabı, sensör ve simülasyon modülleri.</p>
           </div>
           <nav class="main-nav" aria-label="Sayfa navigasyonu">
             <button class="nav-link" type="button" data-page-target="home">Ana Sayfaya Dön</button>
           </nav>
         </header>
 
-        <section class="module-grid" aria-label="İHA modülleri">
+        <section class="module-grid" aria-label="İHA sistemleri modülleri">
+          <article class="module-card performance-card" tabindex="0">
+            <span class="card-icon">PERF</span>
+            <div>
+              <h2>Performans Hesabı</h2>
+              <p>İHA uçuş performansı için temel hesaplama ve operasyon değerlendirme modülü.</p>
+            </div>
+            <button type="button">Performans Hesabını Aç</button>
+          </article>
+
           <article class="module-card imu-module-card" tabindex="0" data-page-target="imuSimulation">
             <span class="card-icon">IMU</span>
             <div>
@@ -88,8 +79,7 @@
             <p>ESP32-S3 + MPU6050 üzerinden gelen yönelim verileriyle gerçek zamanlı uçak hareket simülasyonu</p>
           </div>
           <nav class="main-nav nav-stack" aria-label="Sayfa navigasyonu">
-            <button class="nav-link" type="button" data-page-target="ihaModules">İHA Sistemlerine Dön</button>
-            <button class="nav-link" type="button" data-page-target="home">Ana Sayfaya Dön</button>
+            <button class="nav-link" type="button" data-page-target="ihaSystems">İHA Sistemlerine Dön</button>
           </nav>
         </header>
 
