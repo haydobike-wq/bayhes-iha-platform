@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BAYHES Roket Düşüş Alanı Tahmin ve Risk Analiz Sistemi</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.3.1/ol.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="shell">
+    <section id="home" class="route-page">
+      <section class="intro">
+        <div>
+          <p class="eyebrow">Avionix Aerospace</p>
+          <h1>Avionix Aerospace Görev ve Operasyon Paneli</h1>
+          <p class="intro-copy">
+            Roket ve İHA operasyonlarına yönelik teknik analiz modülleri için merkezi görev paneli.
+          </p>
+        </div>
+        <div class="status-pill" aria-label="Panel durumu">Operasyon paneli</div>
+      </section>
+
+      <section class="module-grid" aria-label="Sistem kategorileri">
+        <a class="module-card" href="#rocketSystemsPage">
+          <div class="module-card__top">
+            <span class="module-card__icon">R</span>
+            <span class="mode-label">Modüller</span>
+          </div>
+          <div>
+            <h2>Roket Sistemleri</h2>
+            <p>Model roket uçuş, düşüş alanı ve operasyon güvenliği analizleri.</p>
+          </div>
+          <span class="module-card__action">Sisteme Git</span>
+        </a>
+
+        <a class="module-card" href="#home" aria-disabled="true">
+          <div class="module-card__top">
+            <span class="module-card__icon">İ</span>
+            <span class="mode-label">Hazır</span>
+          </div>
+          <div>
+            <h2>İHA Sistemleri</h2>
+            <p>Sabit kanat İHA operasyonları için performans ve görev hazırlık analizleri.</p>
+          </div>
+          <span class="module-card__action">Panelde Kal</span>
+        </a>
+      </section>
+    </section>
+
+    <section id="rocketSystemsPage" class="route-page">
+      <div class="section-toolbar">
+        <a class="secondary-button" href="#home">Ana Sayfaya Dön</a>
+      </div>
+
+      <section class="intro compact-intro">
+        <div>
+          <p class="eyebrow">Sistem kategorisi</p>
+          <h1>Roket Sistemleri</h1>
+          <p class="intro-copy">
+            Model roket operasyonlarına yönelik simülasyon, risk analizi ve güvenlik destek modülleri.
+          </p>
+        </div>
+      </section>
+
+      <section class="module-grid" aria-label="Roket sistemleri modülleri">
+        <a class="module-card" href="#bayhesPage">
+          <div class="module-card__top">
+            <span class="module-card__icon">B</span>
+            <span class="mode-label">Monte Carlo</span>
+          </div>
+          <div>
+            <h2>BAYHES</h2>
+            <p>Roket Düşüş Alanı Tahmin ve Risk Analiz Sistemi</p>
+          </div>
+          <span class="module-card__action">Modülü Aç</span>
+        </a>
+      </section>
+    </section>
+
+    <section id="bayhesPage" class="route-page">
+      <div class="section-toolbar">
+        <a class="secondary-button" href="#rocketSystemsPage">Roket Sistemlerine Dön</a>
+        <a class="secondary-button" href="#home">Ana Sayfaya Dön</a>
+      </div>
+
+    <section class="intro">
+      <div>
+        <p class="eyebrow">Belirsizlik analizi ve operasyon güvenliği</p>
+        <h1>BAYHES Roket Düşüş Alanı Tahmin ve Risk Analiz Sistemi</h1>
+        <p class="intro-copy">
+          Model roket atışlarında roketin olası düşüş alanlarını; motor,
+          atmosfer, rüzgâr, stabilite ve paraşüt belirsizliklerini dikkate
+          alarak simülasyon tabanlı analiz eden güvenlik destek sistemidir.
+        </p>
+      </div>
+      <div class="status-pill" aria-label="Model türü">Monte Carlo senaryo analizi</div>
+    </section>
+
+    <section class="workspace" aria-label="Hesaplama paneli">
+      <form id="rocketForm" class="panel form-panel">
+        <div class="panel-heading">
+          <h2>Atış ve Simülasyon Parametreleri</h2>
+          <button class="secondary-button" type="reset">Temizle</button>
+        </div>
+
+        <div class="form-grid">
+          <label>
+            Roket adı / test adı
+            <span class="unit">opsiyonel</span>
+            <input id="rocketName" type="text" placeholder="BAYHES Test 1">
+          </label>
+
+          <label>
+            Roket kütlesi
+            <span class="unit">kg</span>
+            <input id="mass" type="text" inputmode="decimal" value="1.2" required>
+          </label>
+
+          <label>
+            Motor itki ortalaması
+            <span class="unit">N</span>
+            <input id="thrust" type="text" inputmode="decimal" value="35" required>
+          </label>
+
+          <label>
+            Motor yanma süresi
+            <span class="unit">saniye</span>
+            <input id="burnTime" type="text" inputmode="decimal" value="2.1" required>
+          </label>
+
+          <label>
+            Fırlatma açısı
+            <span class="unit">derece</span>
+            <input id="launchAngle" type="text" inputmode="decimal" value="85" required>
+          </label>
+
+          <label>
+            Rüzgâr hızı
+            <span class="unit">m/s</span>
+            <input id="windSpeed" type="text" inputmode="decimal" value="4" required>
+          </label>
+
+          <label>
+            Rüzgâr yönü
+            <span class="unit">derece</span>
+            <input id="windDirection" type="text" inputmode="decimal" value="45" required>
+          </label>
+
+          <label>
+            Paraşütlü iniş hızı
+            <span class="unit">m/s, opsiyonel</span>
+            <input id="descentSpeed" type="text" inputmode="decimal" placeholder="Boşsa paraşüt verisinden hesaplanır">
+          </label>
+
+          <label>
+            Manuel tepe irtifası
+            <span class="unit">metre, opsiyonel</span>
+            <input id="manualApogee" type="text" inputmode="decimal" placeholder="Boş bırakılabilir">
+          </label>
+
+          <label>
+            Atış konumu enlemi
+            <span class="unit">opsiyonel</span>
+            <input id="latitude" type="text" inputmode="decimal" placeholder="39.920770">
+          </label>
+
+          <label>
+            Atış konumu boylamı
+            <span class="unit">opsiyonel</span>
+            <input id="longitude" type="text" inputmode="decimal" placeholder="32.854110">
+          </label>
+
+          <label>
+            Güvenlik katsayısı
+            <span class="unit">çarpan</span>
+            <input id="safetyFactor" type="text" inputmode="decimal" value="1.5" required>
+          </label>
+
+          <label>
+            Senaryo sayısı
+            <span class="unit">Monte Carlo</span>
+            <select id="scenarioCount">
+              <option value="1000">1000 hızlı</option>
+              <option value="5000" selected>5000 dengeli</option>
+              <option value="10000">10000 hassas</option>
+            </select>
+          </label>
+        </div>
+
+        <details class="advanced-panel">
+          <summary>Gelişmiş Parametreler</summary>
+
+          <div class="advanced-grid">
+            <label>
+              Roket uzunluğu
+              <span class="unit">cm</span>
+              <input id="rocketLength" type="text" inputmode="decimal" placeholder="120">
+            </label>
+            <label>
+              Roket çapı
+              <span class="unit">mm</span>
+              <input id="rocketDiameter" type="text" inputmode="decimal" value="60">
+            </label>
+            <label>
+              Yaklaşık sürükleme katsayısı Cd
+              <span class="unit">varsayılan 0.75</span>
+              <input id="rocketCd" type="text" inputmode="decimal" value="0.75">
+            </label>
+            <label>
+              Roket burun tipi
+              <span class="unit">opsiyonel</span>
+              <select id="noseType">
+                <option value="unknown">Bilinmiyor</option>
+                <option value="conical">Konik</option>
+                <option value="ogive">Ogive</option>
+                <option value="round">Yuvarlak</option>
+              </select>
+            </label>
+            <label>
+              Kanatçık sayısı
+              <span class="unit">adet</span>
+              <input id="finCount" type="number" min="0" step="1" placeholder="3">
+            </label>
+            <label>
+              Motor adı / tipi
+              <span class="unit">opsiyonel</span>
+              <input id="motorName" type="text" placeholder="C6 / özel motor">
+            </label>
+            <label>
+              Toplam impulse
+              <span class="unit">Ns, opsiyonel</span>
+              <input id="totalImpulse" type="text" inputmode="decimal" placeholder="Boş bırakılabilir">
+            </label>
+            <label>
+              Delay süresi
+              <span class="unit">saniye</span>
+              <input id="delayTime" type="text" inputmode="decimal" value="0">
+            </label>
+            <label>
+              Atış rakımı
+              <span class="unit">metre</span>
+              <input id="launchAltitude" type="text" inputmode="decimal" value="0">
+            </label>
+            <label>
+              Fırlatma yönü / azimut
+              <span class="unit">derece, 0 kuzey</span>
+              <input id="launchAzimuth" type="text" inputmode="decimal" value="0">
+            </label>
+            <label>
+              Launch rod / rail uzunluğu
+              <span class="unit">metre, opsiyonel</span>
+              <input id="railLength" type="text" inputmode="decimal" placeholder="Boş bırakılabilir">
+            </label>
+            <label>
+              Çıkış yön sapması belirsizliği
+              <span class="unit">derece, opsiyonel</span>
+              <input id="directionUncertainty" type="text" inputmode="decimal" placeholder="Stabiliteye göre">
+            </label>
+            <label>
+              Sıcaklık
+              <span class="unit">°C</span>
+              <input id="temperatureC" type="text" inputmode="decimal" value="20">
+            </label>
+            <label>
+              Basınç
+              <span class="unit">hPa</span>
+              <input id="pressureHpa" type="text" inputmode="decimal" value="1013.25">
+            </label>
+            <label>
+              Bağıl nem
+              <span class="unit">%</span>
+              <input id="humidity" type="text" inputmode="decimal" value="50">
+            </label>
+            <label>
+              Hava yoğunluğu
+              <span class="unit">kg/m³, opsiyonel</span>
+              <input id="manualDensity" type="text" inputmode="decimal" placeholder="Boşsa hesaplanır">
+            </label>
+            <label>
+              Üst irtifa rüzgâr hızı
+              <span class="unit">m/s, opsiyonel</span>
+              <input id="upperWindSpeed" type="text" inputmode="decimal" placeholder="Boşsa yer rüzgârı">
+            </label>
+            <label>
+              Üst irtifa rüzgâr yönü
+              <span class="unit">derece, opsiyonel</span>
+              <input id="upperWindDirection" type="text" inputmode="decimal" placeholder="Boşsa yer rüzgârı">
+            </label>
+            <label>
+              Rüzgâr değişkenliği
+              <span class="unit">%, varsayılan 25</span>
+              <input id="windVariability" type="text" inputmode="decimal" value="25">
+            </label>
+            <label>
+              Rüzgâr yön değişkenliği
+              <span class="unit">derece, varsayılan 15</span>
+              <input id="windDirectionVariability" type="text" inputmode="decimal" value="15">
+            </label>
+            <label>
+              Paraşüt çapı
+              <span class="unit">cm</span>
+              <input id="parachuteDiameter" type="text" inputmode="decimal" value="60">
+            </label>
+            <label>
+              Paraşüt Cd
+              <span class="unit">varsayılan 1.5</span>
+              <input id="parachuteCd" type="text" inputmode="decimal" value="1.5">
+            </label>
+            <label>
+              Açılma zamanı belirsizliği
+              <span class="unit">saniye</span>
+              <input id="deploymentUncertainty" type="text" inputmode="decimal" value="0.5">
+            </label>
+            <label>
+              Paraşüt açılma varsayımı
+              <span class="unit">operasyon durumu</span>
+              <select id="deploymentAssumption">
+                <option value="normal">Normal</option>
+                <option value="late">Geç açılma</option>
+                <option value="unknown">Bilinmiyor</option>
+              </select>
+            </label>
+            <label>
+              Stabilite durumu
+              <span class="unit">belirsizlik kaynağı</span>
+              <select id="stabilityStatus">
+                <option value="unknown">Bilinmiyor</option>
+                <option value="low">Düşük stabilite</option>
+                <option value="normal" selected>Normal stabilite</option>
+                <option value="high">Yüksek stabilite</option>
+              </select>
+            </label>
+            <label>
+              Stabilite marjı
+              <span class="unit">caliber, opsiyonel</span>
+              <input id="stabilityCaliber" type="text" inputmode="decimal" placeholder="Otomatik/opsiyonel">
+            </label>
+            <label>
+              CG noktası
+              <span class="unit">cm, opsiyonel</span>
+              <input id="cgPoint" type="text" inputmode="decimal" placeholder="Boş bırakılabilir">
+            </label>
+            <label>
+              CP noktası
+              <span class="unit">cm, opsiyonel</span>
+              <input id="cpPoint" type="text" inputmode="decimal" placeholder="Boş bırakılabilir">
+            </label>
+            <label class="wide-field">
+              Thrust curve
+              <span class="unit">zaman,itki satırları; opsiyonel</span>
+              <textarea id="thrustCurve" rows="4" placeholder="0,0&#10;0.1,12&#10;0.2,20&#10;0.5,8"></textarea>
+            </label>
+            <label class="wide-field">
+              Kanatçık açıklaması
+              <span class="unit">opsiyonel</span>
+              <textarea id="finDescription" rows="3" placeholder="Kanatçık geometrisi veya gözlem notu"></textarea>
+            </label>
+            <label class="wide-field">
+              Katmanlı rüzgâr
+              <span class="unit">irtifa,hız,yön satırları; opsiyonel</span>
+              <textarea id="windLayers" rows="4" placeholder="0,4,45&#10;50,5,60&#10;100,7,70"></textarea>
+            </label>
+          </div>
+        </details>
+
+        <button class="primary-button" type="submit">Risk Analizini Başlat</button>
+      </form>
+
+      <section class="panel results-panel" aria-live="polite">
+        <div class="panel-heading">
+          <h2>Analiz Sonuçları</h2>
+          <span id="calculationMode" class="mode-label">Hazır</span>
+        </div>
+
+        <div id="messages" class="message-box">
+          Parametreleri girin ve risk analizini başlatın.
+        </div>
+
+        <div class="summary-grid">
+          <article class="info-box">
+            <span>Analiz Özeti</span>
+            <p id="analysisSummary">
+              Girilen parametrelerle Monte Carlo senaryo analizi başlatıldığında tahmini düşüş bölgesi ve risk yoğunluk alanları hesaplanır.
+            </p>
+          </article>
+          <article class="info-box">
+            <span>Güvenlik Notu</span>
+            <p>
+              Bu sistem kesin düşüş noktası vermez. Sonuçlar girilen parametreler ve tanımlanan belirsizlik aralıkları kullanılarak yapılan simülasyona dayalı tahmini risk analizidir. Gerçek rüzgâr profili, hava yoğunluğu, motor performansı, paraşüt açılma davranışı ve uçuş sapmaları sonucu değiştirebilir. Gerçek atışlarda açık alan, izin, güvenlik mesafesi ve yerel kurallar dikkate alınmalıdır.
+            </p>
+          </article>
+        </div>
+
+        <div class="result-grid">
+          <article class="result-card">
+            <span>Ortalama tepe irtifası</span>
+            <strong id="apogeeResult">-</strong>
+          </article>
+          <article class="result-card">
+            <span>Ortalama iniş süresi</span>
+            <strong id="descentTimeResult">-</strong>
+          </article>
+          <article class="result-card">
+            <span>Rüzgâr kaynaklı sürüklenme</span>
+            <strong id="windDriftResult">-</strong>
+          </article>
+          <article class="result-card">
+            <span>Ortalama yatay sapma</span>
+            <strong id="horizontalResult">-</strong>
+          </article>
+          <article class="result-card">
+            <span>Ortalama tahmini düşüş mesafesi</span>
+            <strong id="distanceResult">-</strong>
+          </article>
+          <article class="result-card">
+            <span>İç risk bölgesi kapsama oranı</span>
+            <strong id="innerRiskResult">-</strong>
+          </article>
+          <article class="result-card">
+            <span>Orta risk bölgesi kapsama oranı</span>
+            <strong id="middleRiskResult">-</strong>
+          </article>
+          <article class="result-card">
+            <span>Dış risk bölgesi kapsama oranı</span>
+            <strong id="outerRiskResult">-</strong>
+          </article>
+          <article class="result-card">
+            <span>Toplam senaryo sayısı</span>
+            <strong id="simulationCountResult">-</strong>
+          </article>
+          <article class="result-card wide">
+            <span>Ortalama tahmini düşüş koordinatı</span>
+            <strong id="coordinateResult">Koordinat girilmedi</strong>
+          </article>
+          <article class="result-card">
+            <span>Hesaplanan hava yoğunluğu</span>
+            <strong id="densityResult">-</strong>
+          </article>
+          <article class="result-card">
+            <span>Kullanılan stabilite varsayımı</span>
+            <strong id="stabilityResult">-</strong>
+          </article>
+          <article class="result-card">
+            <span>Kullanılan paraşüt iniş hızı</span>
+            <strong id="usedDescentSpeedResult">-</strong>
+          </article>
+          <article class="result-card">
+            <span>%50 kapsama alanı</span>
+            <strong id="risk50Result">-</strong>
+          </article>
+          <article class="result-card">
+            <span>%80 kapsama alanı</span>
+            <strong id="risk80Result">-</strong>
+          </article>
+          <article class="result-card">
+            <span>%95 güvenlik alanı</span>
+            <strong id="risk95Result">-</strong>
+          </article>
+          <article class="result-card wide">
+            <span>%99 maksimum güvenlik alanı</span>
+            <strong id="risk99Result">-</strong>
+          </article>
+        </div>
+      </section>
+    </section>
+
+    <section id="mapSection" class="panel map-panel" aria-label="Risk haritası">
+      <div class="panel-heading">
+        <h2>Atış Konumu Seçimi ve Risk Haritası</h2>
+        <span id="mapStatus" class="mode-label">Atış konumu seçmek için haritaya tıklayın</span>
+      </div>
+      <div id="map"></div>
+    </section>
+
+    <section class="panel calibration-panel" aria-label="Atış sonrası kalibrasyon">
+      <div class="panel-heading">
+        <h2>Atış Sonrası Kalibrasyon</h2>
+        <span id="calibrationStatus" class="mode-label">Gerçek düşüş verisi bekleniyor</span>
+      </div>
+      <div class="calibration-grid">
+        <label>
+          Gerçek düşüş enlemi
+          <span class="unit">derece</span>
+          <input id="actualLatitude" type="text" inputmode="decimal" placeholder="36.839000">
+        </label>
+        <label>
+          Gerçek düşüş boylamı
+          <span class="unit">derece</span>
+          <input id="actualLongitude" type="text" inputmode="decimal" placeholder="28.764000">
+        </label>
+        <label>
+          Paraşüt durumu
+          <span class="unit">gözlem</span>
+          <select id="actualParachuteStatus">
+            <option value="Normal açıldı">Normal açıldı</option>
+            <option value="Geç açıldı">Geç açıldı</option>
+            <option value="Açılmadı">Açılmadı</option>
+            <option value="Kısmen açıldı">Kısmen açıldı</option>
+          </select>
+        </label>
+        <label>
+          Gerçek gözlem
+          <span class="unit">uçuş davranışı</span>
+          <select id="actualObservation">
+            <option value="Stabil uçtu">Stabil uçtu</option>
+            <option value="Yalpaladı">Yalpaladı</option>
+            <option value="Rüzgârla çok sürüklendi">Rüzgârla çok sürüklendi</option>
+            <option value="Bilinmiyor">Bilinmiyor</option>
+          </select>
+        </label>
+        <label class="wide-field">
+          Atış notu
+          <span class="unit">opsiyonel</span>
+          <textarea id="actualNotes" rows="3" placeholder="Atış sonrası saha gözlemleri"></textarea>
+        </label>
+      </div>
+      <button id="saveFlightButton" class="primary-button" type="button">Atışı Kaydet</button>
+      <div id="calibrationResult" class="message-box">Analiz tamamlandıktan sonra gerçek düşüş koordinatı girilerek tahmin hatası hesaplanabilir.</div>
+    </section>
+
+    <section class="panel records-panel" aria-label="Önceki atışlar">
+      <div class="panel-heading">
+        <h2>Önceki Atışlar</h2>
+        <button id="toggleRecordsButton" class="secondary-button" type="button">Paneli Aç</button>
+      </div>
+      <div id="recordsContent" class="records-content is-collapsed">
+        <div id="performanceSummary" class="summary-grid"></div>
+        <div class="record-actions">
+          <button id="exportCsvButton" class="secondary-button" type="button">CSV Dışa Aktar</button>
+          <button id="clearRecordsButton" class="secondary-button danger-button" type="button">Tüm Kayıtları Temizle</button>
+        </div>
+        <div id="recordsList" class="records-list"></div>
+        <div id="recordDetail" class="record-detail"></div>
+      </div>
+    </section>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/ol@v10.3.1/dist/ol.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
