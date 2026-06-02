@@ -79,6 +79,21 @@ VITE_API_BASE_URL=https://RENDER_BACKEND_ADRESI.onrender.com
 
 Not: `favicon.ico` 404 hatası giderildi. Bu hata görülse bile genellikle backend'in çalışmadığı anlamına gelmez; tarayıcının sekme ikonu için otomatik yaptığı ayrı bir istektir.
 
+## Takım Görselleri
+
+Logo ve proje görsellerini `frontend/public/assets/` klasörüne koyun. Site bu dosyaları otomatik kullanır; dosya yoksa kırık görsel yerine teknik placeholder gösterir.
+
+Önerilen dosya adları:
+
+```text
+frontend/public/assets/logo.png
+frontend/public/assets/rocket-hero.png
+frontend/public/assets/rocket-project.png
+frontend/public/assets/gallery-rocket.png
+```
+
+Bu projede yüklenen logo `logo.png`, atmosfer/uzay sahnesindeki roket ise `rocket-hero.png`, `rocket-project.png` ve `gallery-rocket.png` olarak bağlanmıştır. Daha fazla proje görseli eklerseniz aynı klasöre koyup `frontend/src/pages/Home.jsx` içindeki `projects` ve `gallery` listelerine ekleyebilirsiniz.
+
 ## Frontend Deploy: Vercel
 
 Vercel proje ayarları:

@@ -34,3 +34,4 @@ def downrange_to_local_en(distance_m: float, azimuth_deg_value: float) -> tuple[
     east = distance_m * math.sin(az)
     north = distance_m * math.cos(az)
     return east, north
+uvicorn main:app --reload

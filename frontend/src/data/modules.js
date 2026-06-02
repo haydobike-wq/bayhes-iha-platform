@@ -22,7 +22,7 @@ export const modules = [
     id: 'bayhes',
     categoryId: 'rocket',
     title: 'Balistik Yörünge ve Güvenli Alan Analizi',
-    shortTitle: 'BAYHES',
+    shortTitle: 'BAYHES Roket Düşüş Alanı Tahmin Sistemi',
     description:
       'Model roket uçuşlarında tahmini yörünge, maksimum irtifa, uçuş süresi ve düşüş alanı analizi.',
     status: 'Hazır',
