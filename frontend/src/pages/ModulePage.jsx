@@ -2,14 +2,12 @@ import React, { useEffect } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import ModuleWorkspace from '../components/ModuleWorkspace.jsx';
 import RocketBayhesModule from '../modules/RocketBayhesModule.jsx';
-import UavPerformanceModule from '../modules/UavPerformanceModule.jsx';
-import ImuSimulationModule from '../modules/ImuSimulationModule.jsx';
+import UavPerformance from './UavPerformance.jsx';
 import { getCategory, getModule } from '../data/modules.js';
 
 const moduleComponents = {
   RocketBayhesModule,
-  UavPerformanceModule,
-  ImuSimulationModule,
+  UavPerformance,
 };
 
 export default function ModulePage() {
@@ -36,7 +34,7 @@ export default function ModulePage() {
 
 function ExternalRedirect({ to }) {
   useEffect(() => {
-    window.location.assign(to);
+    window.location.replace(to);
   }, [to]);
 
   return null;

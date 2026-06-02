@@ -1,18 +1,40 @@
-import React, { useMemo, useState } from 'react';
-import { Gauge } from 'lucide-react';
-import InputField from '../components/InputField.jsx';
+import React, { useState } from 'react';
 import ResultCard from '../components/ResultCard.jsx';
 
-const G = 9.81;
-const RHO = 1.225;
-const WING_AREA = 0.30306;
-const CL_MAX = 1.30;
-const CL_TAKEOFF = 0.80;
-const CD_TAKEOFF = 0.08;
-const MOTOR_THRUST = 22.58;
-const TAKEOFF_SPEED_FACTOR = 1.30;
-const ROLLING_FRICTION = 0.04;
-const MIN_THRUST_WEIGHT = 0.30;
+const PERFORMANCE_CONSTANTS = {
+  wingArea: 0.30306,
+  clMax: 1.3,
+  clTakeoff: 0.8,
+  cdTakeoff: 0.08,
+  motorThrust: 22.58,
+  gravity: 9.81,
+  airDensity: 1.225,
+  takeoffSpeedFactor: 1.3,
+  rollingFriction: 0.04,
+};
+
+const initialResults = {
+  stallSpeedMs: '-',
+  stallSpeedKmh: '-',
+  takeoffSpeedMs: '-',
+  takeoffSpeedKmh: '-',
+  requiredRunway: '-',
+  minimumSafeRunway: '-',
+  runwayMargin: '-',
+  takeoffTime: '-',
+  takeoffAcceleration: '-',
+  thrustWeight: '-',
+  thrustStatus: '-',
+  runwayStatus: '-',
+  runwayUsage: '-',
+  takeoffDecision: '-',
+  riskLevel: '-',
+  tones: {},
+};
+
+function parseNumber(value) {
+  return Number(String(value).trim().replace(',', '.'));
+}
 
 function formatNumber(value, digits = 1) {
   return Number(value).toLocaleString('tr-TR', {
@@ -21,156 +43,189 @@ function formatNumber(value, digits = 1) {
   });
 }
 
-function calculatePerformance(weightKg, runwayM, windMps) {
-  const weightN = weightKg * G;
-  const stallSpeed = Math.sqrt((2 * weightN) / (RHO * WING_AREA * CL_MAX));
-  const takeoffSpeed = stallSpeed * TAKEOFF_SPEED_FACTOR;
-  const effectiveTakeoffSpeed = Math.max(takeoffSpeed - windMps * 0.18, stallSpeed * 1.12);
-  const thrustWeight = MOTOR_THRUST / weightN;
-  const liftAtTakeoff = 0.5 * RHO * effectiveTakeoffSpeed ** 2 * WING_AREA * CL_TAKEOFF;
-  const dragAtTakeoff = 0.5 * RHO * effectiveTakeoffSpeed ** 2 * WING_AREA * CD_TAKEOFF;
-  const rollingResistance = ROLLING_FRICTION * Math.max(weightN - liftAtTakeoff, 0);
-  const netForce = MOTOR_THRUST - dragAtTakeoff - rollingResistance;
-  const acceleration = netForce / weightKg;
-  const safeAcceleration = Math.max(acceleration, 0);
-  const takeoffTime = safeAcceleration > 0 ? effectiveTakeoffSpeed / safeAcceleration : Infinity;
-  const requiredRunway =
-    safeAcceleration > 0 ? effectiveTakeoffSpeed ** 2 / (2 * safeAcceleration) : Infinity;
+function calculatePerformance(massKg, runwayLength) {
+  const c = PERFORMANCE_CONSTANTS;
+  const weightN = massKg * c.gravity;
+  const stallSpeed = Math.sqrt((2 * weightN) / (c.airDensity * c.wingArea * c.clMax));
+  const takeoffSpeed = stallSpeed * c.takeoffSpeedFactor;
+  const dynamicPressure = 0.5 * c.airDensity * takeoffSpeed * takeoffSpeed;
+  const drag = dynamicPressure * c.wingArea * c.cdTakeoff;
+  const liftAtTakeoff = dynamicPressure * c.wingArea * c.clTakeoff;
+  const rollingResistance = c.rollingFriction * Math.max(weightN - liftAtTakeoff, 0);
+  const netForce = c.motorThrust - drag - rollingResistance;
+  const acceleration = netForce / massKg;
+  const requiredRunway = acceleration > 0 ? (takeoffSpeed * takeoffSpeed) / (2 * acceleration) : Infinity;
+  const takeoffTime = acceleration > 0 ? takeoffSpeed / acceleration : Infinity;
+  const thrustWeightRatio = c.motorThrust / weightN;
+  const minimumSafeRunway = Number.isFinite(requiredRunway) ? requiredRunway * 1.2 : Infinity;
+  const runwayMargin = runwayLength - minimumSafeRunway;
+  const runwayIsEnough = Number.isFinite(minimumSafeRunway) && runwayLength >= minimumSafeRunway;
+  const runwayUsage = Number.isFinite(minimumSafeRunway) ? (minimumSafeRunway / runwayLength) * 100 : Infinity;
+
+  let thrustStatus = 'YETERSİZ';
+  let thrustTone = 'warning';
+  if (thrustWeightRatio >= 0.55) {
+    thrustStatus = 'YETERLİ';
+    thrustTone = 'success';
+  } else if (thrustWeightRatio >= 0.4) {
+    thrustStatus = 'SINIRDA';
+    thrustTone = 'warning';
+  }
+
+  const runwayStatus = runwayIsEnough ? 'YETERLİ' : 'YETERSİZ';
+  const runwayTone = runwayIsEnough ? 'success' : 'warning';
+
+  let decision = 'KALKIŞ RİSKLİ / UYGUN DEĞİL';
+  let decisionTone = 'warning';
+  let risk = 'YÜKSEK';
+  let riskTone = 'warning';
+
+  if (runwayIsEnough && thrustStatus === 'YETERLİ') {
+    decision = 'KALKIŞ UYGUN';
+    decisionTone = 'success';
+    risk = 'DÜŞÜK';
+    riskTone = 'success';
+  } else if (runwayIsEnough && thrustStatus === 'SINIRDA') {
+    decision = 'KALKIŞ SINIRDA';
+    decisionTone = 'warning';
+    risk = 'ORTA';
+    riskTone = 'warning';
+  }
 
   return {
-    weightN,
-    stallSpeed,
-    takeoffSpeed,
-    effectiveTakeoffSpeed,
-    thrustWeight,
-    acceleration,
-    takeoffTime,
-    requiredRunway,
-    runwayOk: runwayM >= requiredRunway,
-    motorOk: thrustWeight >= MIN_THRUST_WEIGHT && acceleration > 0,
+    stallSpeedMs: `${formatNumber(stallSpeed, 2)} m/s`,
+    stallSpeedKmh: `${formatNumber(stallSpeed * 3.6, 1)} km/h`,
+    takeoffSpeedMs: `${formatNumber(takeoffSpeed, 2)} m/s`,
+    takeoffSpeedKmh: `${formatNumber(takeoffSpeed * 3.6, 1)} km/h`,
+    requiredRunway: Number.isFinite(requiredRunway) ? `${formatNumber(requiredRunway, 1)} m` : 'Yetersiz itki',
+    minimumSafeRunway: Number.isFinite(minimumSafeRunway) ? `${formatNumber(minimumSafeRunway, 1)} m` : '-',
+    runwayMargin: Number.isFinite(runwayMargin) ? `${formatNumber(runwayMargin, 1)} m` : '-',
+    takeoffTime: Number.isFinite(takeoffTime) ? `${formatNumber(takeoffTime, 1)} s` : '-',
+    takeoffAcceleration: acceleration > 0 ? `${formatNumber(acceleration, 2)} m/s²` : 'Yetersiz',
+    thrustWeight: formatNumber(thrustWeightRatio, 2),
+    thrustStatus,
+    runwayStatus,
+    runwayUsage: Number.isFinite(runwayUsage) ? `%${formatNumber(runwayUsage, 0)}` : '-',
+    takeoffDecision: decision,
+    riskLevel: risk,
+    tones: {
+      thrustStatus: thrustTone,
+      runwayStatus: runwayTone,
+      takeoffDecision: decisionTone,
+      riskLevel: riskTone,
+      runwayMargin: runwayIsEnough ? 'success' : 'warning',
+      runwayUsage: runwayUsage <= 80 ? 'success' : runwayUsage <= 100 ? 'warning' : 'warning',
+    },
   };
 }
 
 export default function UavPerformance() {
-  const [form, setForm] = useState({ weightKg: '3.2', runwayM: '85', windMps: '2' });
-
-  const values = useMemo(() => {
-    const weightKg = Number(form.weightKg);
-    const runwayM = Number(form.runwayM);
-    const windMps = Number(form.windMps);
-    if (!weightKg || !runwayM || weightKg <= 0 || runwayM <= 0 || !Number.isFinite(windMps)) {
-      return null;
-    }
-    return calculatePerformance(weightKg, runwayM, windMps);
-  }, [form]);
+  const [form, setForm] = useState({ massKg: '3.5', runwayLength: '55' });
+  const [results, setResults] = useState(initialResults);
 
   function handleChange(event) {
     const { name, value } = event.target;
     setForm((current) => ({ ...current, [name]: value }));
   }
 
+  function handleSubmit(event) {
+    event.preventDefault();
+    const massKg = parseNumber(form.massKg);
+    const runwayLength = parseNumber(form.runwayLength);
+
+    if (![massKg, runwayLength].every(Number.isFinite) || massKg <= 0 || runwayLength <= 0) {
+      setResults({ ...initialResults, takeoffDecision: 'Geçersiz veri' });
+      return;
+    }
+
+    setResults(calculatePerformance(massKg, runwayLength));
+  }
+
   return (
     <section className="module-content">
       <div className="module-intro">
-        <p>
-          Sabit kanat İHA için günlük kalkış değişkenlerine göre pist yeterliliği, güvenli kalkış
-          hızı ve motor itki değerlendirmesi.
-        </p>
+        <p>Sabit kanat İHA için kalkış, pist, hız ve temel uçuş performansı analizleri.</p>
       </div>
 
       <div className="workspace-grid">
-        <form className="panel form-panel">
+        <form className="panel form-panel" onSubmit={handleSubmit}>
           <fieldset>
-            <legend>Günlük Uçuş Değerleri</legend>
+            <legend>Kalkış Verileri</legend>
             <div className="form-grid">
-              <InputField
-                label="Kalkış ağırlığı"
-                name="weightKg"
-                unit="kg"
-                value={form.weightKg}
-                onChange={handleChange}
-                min={0}
-              />
-              <InputField
-                label="Mevcut pist uzunluğu"
-                name="runwayM"
-                unit="m"
-                value={form.runwayM}
-                onChange={handleChange}
-                min={0}
-              />
-              <InputField
-                label="Rüzgar hızı"
-                name="windMps"
-                unit="m/s"
-                value={form.windMps}
-                onChange={handleChange}
-              />
+              <label className="input-field">
+                <span>Uçak kalkış ağırlığı</span>
+                <div className="input-shell">
+                  <input
+                    name="massKg"
+                    type="number"
+                    min="0.1"
+                    step="0.1"
+                    value={form.massKg}
+                    onChange={handleChange}
+                  />
+                  <small>kg</small>
+                </div>
+              </label>
+              <label className="input-field">
+                <span>Pist uzunluğu</span>
+                <div className="input-shell">
+                  <input
+                    name="runwayLength"
+                    type="number"
+                    min="1"
+                    step="0.1"
+                    value={form.runwayLength}
+                    onChange={handleChange}
+                  />
+                  <small>m</small>
+                </div>
+              </label>
             </div>
           </fieldset>
 
-          <div className="constant-list" aria-label="Sabit uçak parametreleri">
-            <span>Kanat alanı: {WING_AREA} m²</span>
-            <span>CL max: {CL_MAX}</span>
-            <span>Motor itkisi: {MOTOR_THRUST} N</span>
-          </div>
+          <button className="primary-button" type="submit">
+            Hesapla
+          </button>
         </form>
 
         <aside className="results-column">
           <div className="panel">
-            <h2>Performans Sonuçları</h2>
-            {values ? (
-              <div className="result-grid">
-                <ResultCard
-                  label="Stall hızı"
-                  value={`${formatNumber(values.stallSpeed, 2)} m/s`}
-                  helper={`${formatNumber(values.stallSpeed * 3.6, 1)} km/h`}
-                />
-                <ResultCard
-                  label="Güvenli kalkış hızı"
-                  value={`${formatNumber(values.effectiveTakeoffSpeed, 2)} m/s`}
-                  helper={`${formatNumber(values.effectiveTakeoffSpeed * 3.6, 1)} km/h`}
-                />
-                <ResultCard
-                  label="Gerekli pist"
-                  value={
-                    Number.isFinite(values.requiredRunway)
-                      ? `${formatNumber(values.requiredRunway)} m`
-                      : 'Hesaplanamadı'
-                  }
-                  tone={values.runwayOk ? 'success' : 'warning'}
-                />
-                <ResultCard
-                  label="Kalkış süresi"
-                  value={
-                    Number.isFinite(values.takeoffTime)
-                      ? `${formatNumber(values.takeoffTime, 2)} s`
-                      : 'Hesaplanamadı'
-                  }
-                />
-                <ResultCard
-                  label="İtki/ağırlık oranı"
-                  value={formatNumber(values.thrustWeight, 2)}
-                  tone={values.motorOk ? 'success' : 'warning'}
-                />
-                <ResultCard
-                  label="Operasyon sonucu"
-                  value={values.runwayOk && values.motorOk ? 'Güvenli görünüyor' : 'Riskli olabilir'}
-                  tone={values.runwayOk && values.motorOk ? 'success' : 'warning'}
-                />
-              </div>
-            ) : (
-              <div className="empty-state">Geçerli ağırlık, pist ve rüzgar değeri girin.</div>
-            )}
-          </div>
-
-          <div className="panel note-panel">
-            <Gauge size={28} />
-            <h2>Analiz Notu</h2>
-            <p>
-              Sonuçlar yaklaşık mühendislik hesabıdır; gerçek uçuş testi, saha emniyeti ve kontrol
-              prosedürlerinin yerine geçmez.
-            </p>
+            <h2>Kalkış Analizi</h2>
+            <div className="result-grid">
+              <ResultCard label="Stall hızı" value={results.stallSpeedKmh} helper={results.stallSpeedMs} />
+              <ResultCard
+                label="Güvenli kalkış hızı"
+                value={results.takeoffSpeedKmh}
+                helper={results.takeoffSpeedMs}
+              />
+              <ResultCard label="Gerekli pist uzunluğu" value={results.requiredRunway} />
+              <ResultCard label="Minimum güvenli pist uzunluğu" value={results.minimumSafeRunway} />
+              <ResultCard
+                label="Pist güvenlik payı"
+                value={results.runwayMargin}
+                tone={results.tones.runwayMargin}
+              />
+              <ResultCard label="Kalkış süresi" value={results.takeoffTime} />
+              <ResultCard label="Kalkış ivmesi" value={results.takeoffAcceleration} />
+              <ResultCard label="İtki / ağırlık oranı" value={results.thrustWeight} />
+              <ResultCard
+                label="İtki yeterliliği"
+                value={results.thrustStatus}
+                tone={results.tones.thrustStatus}
+              />
+              <ResultCard
+                label="Pist yeterliliği"
+                value={results.runwayStatus}
+                tone={results.tones.runwayStatus}
+              />
+              <ResultCard label="Pist kullanım oranı" value={results.runwayUsage} tone={results.tones.runwayUsage} />
+              <ResultCard
+                label="Genel kalkış kararı"
+                value={results.takeoffDecision}
+                tone={results.tones.takeoffDecision}
+              />
+              <ResultCard label="Risk seviyesi" value={results.riskLevel} tone={results.tones.riskLevel} />
+            </div>
           </div>
         </aside>
       </div>

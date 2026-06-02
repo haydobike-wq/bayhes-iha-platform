@@ -42,7 +42,7 @@ export const modules = [
     status: 'Hazır',
     statusTone: 'ready',
     icon: Gauge,
-    component: 'UavPerformanceModule',
+    component: 'UavPerformance',
     actionLabel: 'Modülü Aç',
   },
   {
@@ -56,6 +56,7 @@ export const modules = [
     statusTone: 'ready',
     icon: Activity,
     component: 'ImuSimulationModule',
+    externalPath: '/legacy-dashboard/index.html#imuSimulationPage',
     actionLabel: 'Simülasyonu Aç',
   },
 ];

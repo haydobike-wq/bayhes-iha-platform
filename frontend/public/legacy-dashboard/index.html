@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Avionix Aerospace Görev ve Operasyon Paneli</title>
+    <script>
+      if (window.location.hash === "#performancePage") {
+        window.location.replace("/module/uav/performance");
+      }
+    </script>
+    <link rel="stylesheet" href="style.css">
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.164.1/build/three.module.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <section id="homePage" class="page page-active" aria-label="Ana ekran">
+        <header class="home-hero">
+          <p class="eyebrow">Avionix Aerospace</p>
+          <h1>Avionix Aerospace Görev ve Operasyon Paneli</h1>
+          <p class="hero-copy">Araç kategorisini seçerek ilgili analiz ve kontrol modüllerine erişin. Modüller sistem geliştikçe bu panel üzerinden genişletilecektir.</p>
+        </header>
+
+        <section class="system-grid" aria-label="Araç kategorileri">
+          <article class="system-card" tabindex="0" data-page-target="rocketSystemsPage">
+            <div>
+              <span class="card-kicker">RKT</span>
+              <h2>Roket Sistemleri</h2>
+              <p>Model roket testleri için yörünge, simülasyon ve güvenli alan analizleri.</p>
+            </div>
+            <button type="button" data-page-target="rocketSystemsPage">Seç →</button>
+          </article>
+
+          <article class="system-card" tabindex="0" data-page-target="ihaSystemsPage">
+            <div>
+              <span class="card-kicker">İHA</span>
+              <h2>İHA Sistemleri</h2>
+              <p>Sabit kanat İHA operasyonları için performans ve hazırlık analizleri.</p>
+            </div>
+            <button type="button" data-page-target="ihaSystemsPage">Seç →</button>
+          </article>
+        </section>
+
+        <section class="info-bar" aria-label="Panel açıklaması">
+          <p>Modül seçerek analiz ve kontrol ekranlarına erişin.</p>
+          <p>Bu arayüz eğitim, test, simülasyon ve güvenli operasyon analizi amacıyla hazırlanmıştır.</p>
+        </section>
+
+        <footer class="site-footer">
+          <span>Avionix Aerospace</span>
+          <span>Demo operasyon paneli</span>
+          <span>Eğitim, test ve güvenli analiz modu</span>
+        </footer>
+      </section>
+
+      <section id="rocketSystemsPage" class="page" aria-label="Roket Sistemleri">
+        <header class="page-header">
+          <div>
+            <p class="breadcrumb">Ana ekran / Roket Sistemleri</p>
+            <h1>Roket Sistemleri</h1>
+            <p>Model roket testleri için analiz ve kontrol modülleri.</p>
+          </div>
+          <button type="button" class="secondary-button" data-page-target="homePage">Ana Sayfaya Dön</button>
+        </header>
+
+        <section class="module-grid">
+          <article class="module-card" tabindex="0" data-page-target="bayhesPage">
+            <span class="card-kicker">BAYHES</span>
+            <h2>BAYHES</h2>
+            <p>Balistik yörünge ve güvenli alan hesaplama sistemi.</p>
+            <button type="button" data-page-target="bayhesPage">Modülü Aç</button>
+          </article>
+        </section>
+      </section>
+
+      <section id="ihaSystemsPage" class="page" aria-label="İHA Sistemleri">
+        <header class="page-header">
+          <div>
+            <p class="breadcrumb">Ana ekran / İHA Sistemleri</p>
+            <h1>İHA Sistemleri</h1>
+            <p>Sabit kanat İHA operasyonları için performans ve hazırlık analizleri.</p>
+          </div>
+          <button type="button" class="secondary-button" data-page-target="homePage">Ana Sayfaya Dön</button>
+        </header>
+
+        <section class="module-grid two-column">
+          <article class="module-card" tabindex="0" data-page-target="performancePage">
+            <span class="card-kicker">PERF</span>
+            <h2>Performans Parametreleri</h2>
+            <p>Sabit kanat İHA için kalkış, pist, hız ve temel uçuş performansı analizleri.</p>
+            <button type="button" data-page-target="performancePage">Modülü Aç</button>
+          </article>
+
+          <article class="module-card" tabindex="0" data-page-target="imuSimulationPage">
+            <span class="card-kicker">IMU</span>
+            <h2>IMU Simülasyonu</h2>
+            <p>ESP32-S3 + MPU6050 üzerinden gelen roll, pitch, yaw verileriyle gerçek zamanlı 3D uçak yönelim simülasyonu.</p>
+            <button type="button" data-page-target="imuSimulationPage">Simülasyonu Aç</button>
+          </article>
+        </section>
+      </section>
+
+      <section id="bayhesPage" class="page" aria-label="Bayhes hesaplama ekranı">
+        <header class="page-header">
+          <div>
+            <p class="breadcrumb">Roket Sistemleri / BAYHES</p>
+            <h1>BAYHES</h1>
+            <p>Balistik yörünge ve güvenli alan hesaplama sistemi.</p>
+          </div>
+          <button type="button" class="secondary-button" data-page-target="rocketSystemsPage">Roket Sistemlerine Dön</button>
+        </header>
+
+        <section class="calculator-layout">
+          <form id="bayhesForm" class="control-card">
+            <label>Çıkış hızı (m/s)<input id="bayhesVelocity" type="number" min="1" value="85"></label>
+            <label>Atış açısı (derece)<input id="bayhesAngle" type="number" min="1" max="89" value="55"></label>
+            <label>Başlangıç yüksekliği (m)<input id="bayhesHeight" type="number" min="0" value="1.5"></label>
+            <label>Güvenlik katsayısı<input id="bayhesSafety" type="number" min="1" step="0.1" value="1.25"></label>
+            <button type="submit">Hesapla</button>
+          </form>
+
+          <section class="results-card">
+            <h2>Sonuç Alanı</h2>
+            <dl class="result-list">
+              <div><dt>Uçuş süresi</dt><dd id="bayhesTime">-</dd></div>
+              <div><dt>Maksimum irtifa</dt><dd id="bayhesAltitude">-</dd></div>
+              <div><dt>Tahmini menzil</dt><dd id="bayhesRange">-</dd></div>
+              <div><dt>Güvenli alan yarıçapı</dt><dd id="bayhesSafeRadius">-</dd></div>
+            </dl>
+          </section>
+        </section>
+      </section>
+
+      <section id="performancePage" class="page" aria-label="Performans Parametreleri">
+        <header class="page-header performance-hero">
+          <div>
+            <p class="breadcrumb">İHA Sistemleri / Performans Parametreleri</p>
+            <h1>Performans Parametreleri</h1>
+            <p>Sabit kanat İHA için kalkış, pist, hız ve temel uçuş performansı analizleri.</p>
+          </div>
+          <button type="button" class="secondary-button" data-page-target="ihaSystemsPage">İHA Sistemlerine Dön</button>
+        </header>
+
+        <section class="performance-layout">
+          <form id="performanceForm" class="control-card input-panel">
+            <div>
+              <p class="eyebrow">Girdi Paneli</p>
+              <h2>Kalkış Verileri</h2>
+            </div>
+            <label>Uçak kalkış ağırlığı (kg)<input id="aircraftWeightKg" type="number" min="0.1" step="0.1" value="3.5"></label>
+            <label>Pist uzunluğu (m)<input id="runwayLengthM" type="number" min="1" step="0.1" value="55"></label>
+            <button type="submit">Hesapla</button>
+          </form>
+
+          <section class="results-card results-panel">
+            <div>
+              <p class="eyebrow">Sonuç Paneli</p>
+              <h2>Kalkış Analizi</h2>
+            </div>
+            <div class="performance-results">
+              <article class="result-card" id="stallSpeedCard">
+                <span>Stall hızı</span>
+                <strong id="stallSpeedKmhResult">-</strong>
+                <small id="stallSpeedMsResult">-</small>
+              </article>
+              <article class="result-card" id="takeoffSpeedCard">
+                <span>Güvenli kalkış hızı</span>
+                <strong id="takeoffSpeedKmhResult">-</strong>
+                <small id="takeoffSpeedMsResult">-</small>
+              </article>
+              <article class="result-card" id="requiredRunwayCard"><span>Gerekli pist uzunluğu</span><strong id="requiredRunwayResult">-</strong></article>
+              <article class="result-card" id="minimumSafeRunwayCard"><span>Minimum güvenli pist uzunluğu</span><strong id="minimumSafeRunwayResult">-</strong></article>
+              <article class="result-card" id="runwayMarginCard"><span>Pist güvenlik payı</span><strong id="runwayMarginResult">-</strong></article>
+              <article class="result-card" id="takeoffTimeCard"><span>Kalkış süresi</span><strong id="takeoffTimeResult">-</strong></article>
+              <article class="result-card" id="takeoffAccelerationCard"><span>Kalkış ivmesi</span><strong id="takeoffAccelerationResult">-</strong></article>
+              <article class="result-card" id="thrustWeightCard"><span>İtki / ağırlık oranı</span><strong id="thrustWeightResult">-</strong></article>
+              <article class="result-card" id="thrustStatusCard"><span>İtki yeterliliği</span><strong id="thrustStatusResult">-</strong></article>
+              <article class="result-card" id="runwayStatusCard"><span>Pist yeterliliği</span><strong id="runwayStatusResult">-</strong></article>
+              <article class="result-card" id="runwayUsageCard"><span>Pist kullanım oranı</span><strong id="runwayUsageResult">-</strong></article>
+              <article class="result-card" id="takeoffDecisionCard"><span>Genel kalkış kararı</span><strong id="takeoffDecisionResult">-</strong></article>
+              <article class="result-card" id="riskLevelCard"><span>Risk seviyesi</span><strong id="riskLevelResult">-</strong></article>
+            </div>
+          </section>
+        </section>
+      </section>
+
+      <section id="imuSimulationPage" class="page" aria-label="IMU Simülasyonu">
+        <header class="page-header">
+          <div>
+            <p class="breadcrumb">İHA Sistemleri / IMU Simülasyonu</p>
+            <h1>Avionix IMU Uçuş Simülasyonu</h1>
+            <p>ESP32-S3 + MPU6050 üzerinden gelen yönelim verileriyle gerçek zamanlı uçak hareket simülasyonu</p>
+          </div>
+          <button type="button" class="secondary-button" data-page-target="ihaSystemsPage">İHA Sistemlerine Dön</button>
+        </header>
+
+        <section class="simulation-layout">
+          <aside class="imu-panel">
+            <div>
+              <p class="eyebrow">Seri Bağlantı</p>
+              <h2>Seri Bağlantı</h2>
+            </div>
+
+            <div id="supportWarning" class="notice hidden" role="alert">
+              Web Serial API bu tarayıcıda desteklenmiyor. Lütfen Chrome veya Edge kullanın.
+            </div>
+            <div id="messageBox" class="notice notice-warning hidden" role="status"></div>
+
+            <div class="button-row">
+              <button id="connectButton" type="button">Cihaza Bağlan</button>
+              <button id="disconnectButton" type="button" disabled>Bağlantıyı Kes</button>
+            </div>
+
+            <dl class="status-list">
+              <div><dt>Durum</dt><dd id="connectionStatus" class="status status-offline">Bağlı değil</dd></div>
+              <div><dt>Baud rate</dt><dd>115200</dd></div>
+              <div><dt>Veri durumu</dt><dd id="dataStatus">Veri bekleniyor</dd></div>
+              <div><dt>Son veri zamanı</dt><dd id="lastDataTime">-</dd></div>
+            </dl>
+
+            <section class="readouts">
+              <article><span>Roll</span><strong><output id="rollValue">0.00</output>°</strong></article>
+              <article><span>Pitch</span><strong><output id="pitchValue">0.00</output>°</strong></article>
+              <article><span>Yaw</span><strong><output id="yawValue">0.00</output>°</strong></article>
+            </section>
+
+            <button id="calibrateButton" type="button">Sıfırla / Kalibre Et</button>
+
+            <section class="model-settings">
+              <h2>Model ayarları</h2>
+              <label><input id="rollInvert" type="checkbox"> Roll invert</label>
+              <label><input id="pitchInvert" type="checkbox"> Pitch invert</label>
+              <label><input id="yawInvert" type="checkbox"> Yaw invert</label>
+            </section>
+          </aside>
+
+          <section class="scene-panel">
+            <div class="scene-header">
+              <div>
+                <p class="eyebrow">3D Uçak Sahnesi</p>
+                <h2>Yönelim Görselleştirme</h2>
+                <p id="modelStatus" class="model-status">Model yükleniyor...</p>
+              </div>
+              <span id="sceneBadge">Veri bekleniyor</span>
+            </div>
+            <div class="viewer-wrap">
+              <canvas id="sceneCanvas"></canvas>
+            </div>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
