@@ -1183,37 +1183,12 @@ clearRecordsButton.addEventListener("click", () => {
 
 exportCsvButton.addEventListener("click", exportRecordsCsv);
 
-function normalizeRoute(hash) {
-  const route = (hash || "#home").replace("#", "");
-  if (route === "bayhesRiskPage") return "bayhesPage";
-  if (["home", "rocketSystemsPage", "bayhesPage"].includes(route)) return route;
-  return "home";
-}
-
-function showRoute() {
-  const activeRoute = normalizeRoute(window.location.hash);
-  document.querySelectorAll(".route-page").forEach((page) => {
-    page.classList.toggle("is-active", page.id === activeRoute);
-  });
-
-  if (!window.location.hash) {
-    history.replaceState(null, "", "#home");
-  }
-
-  if (activeRoute === "bayhesPage") {
-    ensureMap();
-    refreshMapSize();
-  }
-}
-
 window.addEventListener("load", () => {
-  showRoute();
+  ensureMap();
   setTimeout(() => {
     if (map) map.updateSize();
   }, 500);
 });
-
-window.addEventListener("hashchange", showRoute);
 
 window.addEventListener("resize", () => {
   setTimeout(() => {
@@ -1223,5 +1198,5 @@ window.addEventListener("resize", () => {
 latitudeInput.addEventListener("change", focusMapFromCoordinateInputs);
 longitudeInput.addEventListener("change", focusMapFromCoordinateInputs);
 
-showRoute();
+ensureMap();
 renderRecords();

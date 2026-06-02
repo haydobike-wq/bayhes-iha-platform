@@ -9,80 +9,10 @@
 </head>
 <body>
   <main class="shell">
-    <section id="home" class="route-page">
-      <section class="intro">
-        <div>
-          <p class="eyebrow">Avionix Aerospace</p>
-          <h1>Avionix Aerospace Görev ve Operasyon Paneli</h1>
-          <p class="intro-copy">
-            Roket ve İHA operasyonlarına yönelik teknik analiz modülleri için merkezi görev paneli.
-          </p>
-        </div>
-        <div class="status-pill" aria-label="Panel durumu">Operasyon paneli</div>
-      </section>
-
-      <section class="module-grid" aria-label="Sistem kategorileri">
-        <a class="module-card" href="#rocketSystemsPage">
-          <div class="module-card__top">
-            <span class="module-card__icon">R</span>
-            <span class="mode-label">Modüller</span>
-          </div>
-          <div>
-            <h2>Roket Sistemleri</h2>
-            <p>Model roket uçuş, düşüş alanı ve operasyon güvenliği analizleri.</p>
-          </div>
-          <span class="module-card__action">Sisteme Git</span>
-        </a>
-
-        <a class="module-card" href="#home" aria-disabled="true">
-          <div class="module-card__top">
-            <span class="module-card__icon">İ</span>
-            <span class="mode-label">Hazır</span>
-          </div>
-          <div>
-            <h2>İHA Sistemleri</h2>
-            <p>Sabit kanat İHA operasyonları için performans ve görev hazırlık analizleri.</p>
-          </div>
-          <span class="module-card__action">Panelde Kal</span>
-        </a>
-      </section>
-    </section>
-
-    <section id="rocketSystemsPage" class="route-page">
-      <div class="section-toolbar">
-        <a class="secondary-button" href="#home">Ana Sayfaya Dön</a>
-      </div>
-
-      <section class="intro compact-intro">
-        <div>
-          <p class="eyebrow">Sistem kategorisi</p>
-          <h1>Roket Sistemleri</h1>
-          <p class="intro-copy">
-            Model roket operasyonlarına yönelik simülasyon, risk analizi ve güvenlik destek modülleri.
-          </p>
-        </div>
-      </section>
-
-      <section class="module-grid" aria-label="Roket sistemleri modülleri">
-        <a class="module-card" href="#bayhesPage">
-          <div class="module-card__top">
-            <span class="module-card__icon">B</span>
-            <span class="mode-label">Monte Carlo</span>
-          </div>
-          <div>
-            <h2>BAYHES</h2>
-            <p>Roket Düşüş Alanı Tahmin ve Risk Analiz Sistemi</p>
-          </div>
-          <span class="module-card__action">Modülü Aç</span>
-        </a>
-      </section>
-    </section>
-
-    <section id="bayhesPage" class="route-page">
-      <div class="section-toolbar">
-        <a class="secondary-button" href="#rocketSystemsPage">Roket Sistemlerine Dön</a>
-        <a class="secondary-button" href="#home">Ana Sayfaya Dön</a>
-      </div>
+    <div class="section-toolbar">
+      <a class="secondary-button" href="/category/rocket">Roket Sistemlerine Dön</a>
+      <a class="secondary-button" href="/">Ana Sayfaya Dön</a>
+    </div>
 
     <section class="intro">
       <div>
@@ -533,7 +463,6 @@
         <div id="recordsList" class="records-list"></div>
         <div id="recordDetail" class="record-detail"></div>
       </div>
-    </section>
     </section>
   </main>
 

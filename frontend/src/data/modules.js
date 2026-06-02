@@ -21,14 +21,16 @@ export const modules = [
   {
     id: 'bayhes',
     categoryId: 'rocket',
-    title: 'Balistik Yörünge ve Güvenli Alan Analizi',
-    shortTitle: 'BAYHES Roket Düşüş Alanı Tahmin Sistemi',
+    title: 'BAYHES',
+    shortTitle: 'BAYHES',
     description:
-      'Model roket uçuşlarında tahmini yörünge, maksimum irtifa, uçuş süresi ve düşüş alanı analizi.',
+      'Roket Düşüş Alanı Tahmin ve Risk Analiz Sistemi',
     status: 'Hazır',
     statusTone: 'ready',
     icon: Activity,
     component: 'RocketBayhesModule',
+    externalPath: '/bayhes-risk/index.html',
+    actionLabel: 'Modülü Aç',
   },
   {
     id: 'performance',
@@ -36,11 +38,25 @@ export const modules = [
     title: 'Performans Parametreleri',
     shortTitle: 'Performans',
     description:
-      'Kalkış ağırlığı, pist uzunluğu ve rüzgar koşullarına göre sabit kanat İHA performans değerlendirmesi.',
+      'Sabit kanat İHA için kalkış, pist, hız ve temel uçuş performansı analizleri.',
     status: 'Hazır',
     statusTone: 'ready',
     icon: Gauge,
     component: 'UavPerformanceModule',
+    actionLabel: 'Modülü Aç',
+  },
+  {
+    id: 'imu-simulation',
+    categoryId: 'uav',
+    title: 'IMU Simülasyonu',
+    shortTitle: 'IMU',
+    description:
+      'ESP32-S3 + MPU6050 üzerinden gelen roll, pitch, yaw verileriyle gerçek zamanlı 3D uçak yönelim simülasyonu.',
+    status: 'Hazır',
+    statusTone: 'ready',
+    icon: Activity,
+    component: 'ImuSimulationModule',
+    actionLabel: 'Simülasyonu Aç',
   },
 ];
 

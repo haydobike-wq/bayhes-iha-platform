@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import ModuleWorkspace from '../components/ModuleWorkspace.jsx';
 import RocketBayhesModule from '../modules/RocketBayhesModule.jsx';
 import UavPerformanceModule from '../modules/UavPerformanceModule.jsx';
+import ImuSimulationModule from '../modules/ImuSimulationModule.jsx';
 import { getCategory, getModule } from '../data/modules.js';
 
 const moduleComponents = {
   RocketBayhesModule,
   UavPerformanceModule,
+  ImuSimulationModule,
 };
 
 export default function ModulePage() {
@@ -19,6 +21,10 @@ export default function ModulePage() {
     return <Navigate to="/" replace />;
   }
 
+  if (module.externalPath) {
+    return <ExternalRedirect to={module.externalPath} />;
+  }
+
   const Component = moduleComponents[module.component];
 
   return (
@@ -26,4 +32,12 @@ export default function ModulePage() {
       <Component />
     </ModuleWorkspace>
   );
+}
+
+function ExternalRedirect({ to }) {
+  useEffect(() => {
+    window.location.assign(to);
+  }, [to]);
+
+  return null;
 }
